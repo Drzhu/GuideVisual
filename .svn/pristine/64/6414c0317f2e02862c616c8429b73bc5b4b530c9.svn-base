@@ -1,0 +1,10 @@
+package com.guide.community.mapper;
+
+import java.util.List;
+
+import com.guide.community.pojo.CommunityKeshi;
+
+public interface CommunityKeshiMapper {
+	
+	List<CommunityKeshi> query();
+}

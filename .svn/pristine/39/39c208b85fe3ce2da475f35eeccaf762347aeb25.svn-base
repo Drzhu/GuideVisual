@@ -1,0 +1,17 @@
+package com.backup;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service("keshiService")
+public class KeshiServiceImpl implements KeshiService {
+	@Autowired
+	private KeshiMapper keshiMapper;
+
+	public List<Keshi> query() {
+		return keshiMapper.query();
+	}
+
+}

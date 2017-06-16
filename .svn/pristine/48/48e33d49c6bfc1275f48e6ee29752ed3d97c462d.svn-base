@@ -1,0 +1,18 @@
+package com.backup;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service("community_keshiService")
+public class CommunityKeshiServiceImpl implements CommunityKeshiService {
+	@Autowired
+	private CommunityKeshiMapper community_keshiMapper;
+
+	public List<CommunityKeshi> query() {
+		
+		return community_keshiMapper.query();
+	}
+
+}

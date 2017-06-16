@@ -1,0 +1,20 @@
+package com.guide.community.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.guide.community.mapper.CommunityDateCourseRegMapper;
+import com.guide.community.pojo.CommunityDateCourseReg;
+
+@Service("community_date_course_regService")
+public class CommunityDateCourseRegServiceImpl implements CommunityDateCourseRegService {
+	@Autowired
+	private CommunityDateCourseRegMapper datecourseregMapper;
+
+	public List<CommunityDateCourseReg> query() {
+		return datecourseregMapper.query();
+	}
+
+}

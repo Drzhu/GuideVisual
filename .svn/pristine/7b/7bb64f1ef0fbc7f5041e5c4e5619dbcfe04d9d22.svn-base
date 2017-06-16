@@ -1,0 +1,12 @@
+package com.guide.community.service;
+
+import java.util.List;
+
+import com.guide.community.pojo.CommunityDetailInfo;
+
+public interface CommunityDetailInfoService {
+
+	public List<CommunityDetailInfo> datatable_query(int start ,String keshi_name);
+	public int query_count(String str);
+	public List<CommunityDetailInfo> query_keshi(String keshi_name);
+}

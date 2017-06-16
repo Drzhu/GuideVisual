@@ -1,0 +1,46 @@
+/**
+ * 
+ */
+function date_line(date_legend_list,date_data1_list,date_data2_list) {
+	var option = {
+		title : {
+			text : '每月的课程数和医生注册数',
+			subtext : '数据来自盖德数据中心'
+		},
+		tooltip : {
+			trigger : 'axis'
+		},
+		grid: {
+			left:0,
+			top:'5%',
+			right: '3%',
+			bottom: '3%',
+			containLabel: true
+		},
+		legend : {
+			data : [ '课程数目', '医生注册数量' ]
+		},
+		calculable : true,
+		xAxis : [ {
+			type : 'category',
+			boundaryGap : false,
+			data : date_legend_list
+		} ],
+		yAxis : [ {
+			type : 'value',
+			axisLabel : {
+				formatter : '{value} '
+			}
+		} ],
+		series : [ {
+			name : '课程数目',
+			type : 'line',
+			data : date_data1_list,
+		}, {
+			name : '医生注册数量',
+			type : 'line',
+			data : date_data2_list,
+		} ]
+	};
+	return option;
+}

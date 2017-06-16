@@ -1,0 +1,27 @@
+package com.backup;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service("hospitalService")
+public class HospitalServiceImpl implements HospitalService {
+	@Autowired
+	private HospitalMapper hospitalMapper;
+
+	public List<Hospital> query_prov() {
+		// TODO Auto-generated method stub
+		return hospitalMapper.query_prov();
+	}
+
+	public List<Hospital> query_city() {
+		// TODO Auto-generated method stub
+		return hospitalMapper.query_city();
+	}
+
+	public List<Hospital> getdata_city(String selectedProvince) {
+		// TODO Auto-generated method stub
+		return hospitalMapper.getdata_city(selectedProvince);
+	}
+}

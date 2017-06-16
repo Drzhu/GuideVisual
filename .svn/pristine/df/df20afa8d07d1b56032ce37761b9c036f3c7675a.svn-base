@@ -1,0 +1,13 @@
+package com.backup;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+public interface CommunityDetailInfoMapper {
+	List<CommunityDetailInfo> query_keshi(String keshi_name);
+
+	List<CommunityDetailInfo> datatable_query(@Param("start") int start,@Param("keshi_name") String keshi_name);
+
+	int query_count(@Param("str") String str);
+}

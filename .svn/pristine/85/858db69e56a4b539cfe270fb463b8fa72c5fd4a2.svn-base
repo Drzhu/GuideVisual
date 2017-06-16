@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.guide.community.mapper.CommunityKechengPatientViewerMapper">
+	<select id="query" resultType="CommunityKechengPatientViewer">
+		select
+		course_name,patient_num,timeperviewer from
+		community_kecheng_patient_viewer order by timeperviewer*1;
+	</select>
+
+</mapper>

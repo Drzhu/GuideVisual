@@ -1,0 +1,17 @@
+package com.backup;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service("community_kechengService")
+public class CommunityKechengServiceImpl implements CommunityKechengService {
+	@Autowired
+	private CommunityKechengMapper courseMapper;
+
+	public List<CommunityKecheng> query() {
+		return courseMapper.query();
+	}
+
+}

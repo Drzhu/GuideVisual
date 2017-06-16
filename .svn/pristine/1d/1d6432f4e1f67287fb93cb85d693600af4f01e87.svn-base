@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.guide.community.mapper.CommunityDocMapper" >
+  
+  <select id="community_query_prov" resultType="CommunityDoc">
+		select distinct
+		prov_name,prov_num from community_doc order by prov_num*1 desc;
+	</select>
+	<!-- 查询全国医生省内各市分布 -->
+	<select id="query_city" resultType="CommunityDoc">
+		select city_name,city_num
+		from community_doc order by city_num*1 desc;
+	</select>
+	<!-- 查询全国医生指定省内各市 -->
+	<select id="getdata_city" resultType="CommunityDoc" parameterType="java.lang.String">
+	  <![CDATA[
+		select city_name,city_num
+		from community_doc where prov_name = #{selectedProvince} order by city_num*1 desc
+		]]>
+	</select>
+</mapper>

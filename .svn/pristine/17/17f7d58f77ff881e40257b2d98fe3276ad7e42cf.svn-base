@@ -1,0 +1,106 @@
+<%@ page language="java" pageEncoding="UTF-8"%>
+<%--引入JSTL核心标签库 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<meta name="viewport" content="width=device-width, initial-scale=1,maxinum-scale=1,user-scalable=no">
+    	<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<meta name="renderer" content="webkit">
+    	<link rel="stylesheet" type="text/css" href="font-awesome-4.6.3/css/font-awesome.css" />
+    <link rel="stylesheet" type="text/css" href="css/manage_css/bootstrap.min.css" />
+    	<link rel="stylesheet" type="text/css" href="css/manage_css/css.css" />
+		<title>课程信息</title>
+	</head>
+	<body>
+		<nav class="navbar navbar-fixed-top navbar-inverse custom-navbar">
+			<div class="container-fluid">
+				<div class="navbar-header" style="width:100%;">
+				    <button type="button" class="navbar-toggle pull-left" data-toggle="sidebar" data-target="#sidebar" >
+				        <span class="sr-only">缩小菜单</span>
+				        <span class="icon-bar"></span>
+				        <span class="icon-bar"></span>
+				        <span class="icon-bar"></span>
+				    </button>
+					<a href="" class="navbar-brand"><img class="pull-left" src="img/guidelogo.png" width="38"/>数据可视化</a>
+					<div class="user-menu dropdown pull-right">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-user"></span> ${username} <span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="#"><span class="fa fa-cog"></span> 设置</a></li>
+							<li><a href="logout"><i class="fa fa-sign-out"></i>&nbsp;退出</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</nav>
+		<div id="sidebar" class="col-sm-3 col-lg-2 sidebar">
+			<ul class="nav-list">
+	            <li><a href="hospital"><i class="fa fa-dashboard"></i> 医院信息</a></li>
+				<li class="active"><a href="course"><i class="fa fa-th"></i> 课程信息</a></li>
+				<li><a href="patient"><i class="fa fa-info-circle"></i> 患者信息</a></li>
+				<li><a href="date"><i class="fa fa-calendar"></i> 日期信息</a></li>
+	        </ul>
+		</div>
+		<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
+			<div class="row">
+				<ol class="breadcrumb">
+				  <li><i class="fa fa-home"></i> 课程信息</li>
+				</ol>
+			</div>
+			<div class="row margin-top">
+				<div class="col-sm-12">
+					<div class="panel panel-info">
+						<div class="panel-heading">课程统计</div>
+						<div class="panel-body">
+							<div id="course_cal" style="width: 100%; height: 700px;"></div>
+							<h3 class="color-info">统计表格</h3>
+							<div class="table-responsive">
+											<!--全国表格start-->
+											<table class="table table-bordered table-hover table-striped">
+												<tr>
+													<th>课程名称</th>
+													<th>录制课程数目</th>
+												</tr>
+												<c:forEach var="item" items="${Pie_course}" varStatus="status">
+												<tr>
+												<td>${item.kecheng_name}</td>
+												<td>${item.kecheng_num}</td>
+												</tr>
+												</c:forEach>
+											</table>	
+										</div>
+						</div>
+					</div>
+				</div>
+			</div>	
+		</div>
+		
+		<script src="js/jquery-3.1.0.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/echarts.min.js"></script>
+		<script src="js/china.js"></script>
+		<script src="js/manage.js"></script>
+		<script src="js/manage_option/pie_keshi.js"></script>
+		<script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+		var Pie_course_chart = echarts.init(document.getElementById('course_cal'));
+		var course_legend_list = [];
+    	var course_data_list = [];
+		<c:forEach var="item" items="${Pie_course}" varStatus="status">
+		var course_dict= {};
+		course_legend_list.push('${item.kecheng_name}');
+		course_dict["name"]='${item.kecheng_name}';
+		course_dict["value"]=${item.kecheng_num};
+		course_data_list.push(course_dict);
+		</c:forEach>
+		var pie_course_option = pie_course(course_legend_list,course_data_list);
+        // 使用刚指定的配置项和数据显示图表。
+         Pie_course_chart.setOption(pie_course_option);
+        window.onresize = Pie_course_chart.resize;
+    </script>
+	</body>
+</html>

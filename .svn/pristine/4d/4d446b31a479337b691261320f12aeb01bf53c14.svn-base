@@ -1,0 +1,6 @@
+$(function(){
+	$(".pro-city>.back-btn").on("click",function(){
+		$(this).parent(".pro-city").hide();
+		$(".whole-country").show();
+	});
+});

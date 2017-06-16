@@ -1,0 +1,10 @@
+package com.backup;
+
+import java.util.List;
+
+public interface CommunityDetailInfoService {
+
+	public List<CommunityDetailInfo> datatable_query(int start ,String keshi_name);
+	public int query_count(String str);
+	public List<CommunityDetailInfo> query_keshi(String keshi_name);
+}

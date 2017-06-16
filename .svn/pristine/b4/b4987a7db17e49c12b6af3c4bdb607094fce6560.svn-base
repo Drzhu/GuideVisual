@@ -1,0 +1,9 @@
+package com.guide.mapper;
+
+import java.util.List;
+
+import com.guide.pojo.Keshi;
+
+public interface KeshiMapper {
+	List<Keshi> query();
+}

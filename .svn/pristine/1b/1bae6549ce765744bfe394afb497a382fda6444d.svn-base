@@ -1,0 +1,334 @@
+<%@ page language="java" pageEncoding="UTF-8"%>
+<%--引入JSTL核心标签库 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!doctype html>
+<html lang="">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>中交数据中心</title>
+
+<link rel="stylesheet" href="styles/main.css">
+
+</head>
+<body>
+
+<header>
+<input hidden="true" id="vehicle_input" type="text">
+<input hidden="true" id="vehicle_input_02" type="text">
+	<section class="top-tab-bar">
+		<ul id="tabNav">
+			<li>最近7天</li>
+			<li>最近5周</li>
+			<!-- <li>最近半年</li> -->
+		</ul>
+	</section>
+	
+</header>
+
+<article class="container">
+
+<div id ="xyy_seven" hidden="true">
+    <c:forEach var="xyy" items="${xyy_seven}">
+   <fmt:formatDate value="${xyy.date_day}" type="date" pattern='MM-dd'/>@
+    </c:forEach>
+    </div>
+    <div id ="xyy_seven_count" hidden="true">
+    <c:forEach var="xyy" items="${xyy_seven}">
+    ${xyy.day_vehicle_num}@
+    </c:forEach>
+    </div>
+    
+    <!-- 下面是前五周的数据 -->
+     <div id ="xyy_five_date" hidden="true">
+    <c:forEach var="xyy" items="${xyy_five}">
+    ${xyy.week_of_year}@
+    </c:forEach>
+    </div>
+     <div id ="xyy_five_count" hidden="true">
+    <c:forEach var="xyy" items="${xyy_five}">
+    ${xyy.day_vehicle_num}@
+    </c:forEach>
+    </div>
+	<div id="tabCon" class="tab-con-box">
+
+		<div class="tab-con">
+			<div class="chart-box">
+			<div id="xyy_severn" class="echart"></div>
+			</div>
+		</div>
+		<div class="tab-con">
+			<div class="chart-box">
+				<div id = "xyy_five" class="echart"></div>
+			</div>
+		</div>
+		<!-- <div class="tab-con">
+			<div class="chart-box">
+				<div id = "xyy_half" class="echart"></div>
+			</div>
+		</div> -->
+	</div>
+</article>
+
+<script src="scripts/zepto.min.js"></script>
+<script src="echarts/dist/echarts.js"></script>
+<script src="scripts/main.js"></script>
+
+<script>
+	$(function(){
+		new PubTab({
+			tabTag: document.querySelector('#tabNav'),
+			tabCon: document.querySelector('#tabCon')
+		});
+		sW = $(window).width();
+		$('.echart').css({
+			width: sW
+		})
+	});
+</script>
+ <script type="text/javascript">
+ 
+ var xyy_list = [];
+ var xyy_count_list=[];
+ var xyy_five_count_list=[];
+ var xyy_five_date_list=[];
+ 
+ var xyy = $("#xyy_seven").text().trim().split("@");
+ var xyy_count = $("#xyy_seven_count").text().trim().split("@");
+ var xyy_five_count = $("#xyy_five_count").text().trim().split("@");
+ var xyy_five_date = $("#xyy_five_date").text().trim().split("@");
+ 
+ console.log(xyy_five_date);
+ for (var i = xyy.length-1; i >0 ; i--) {
+	 xyy_list.push(xyy[i-1].trim());
+	 xyy_count_list.push(parseInt(xyy_count[i-1].trim()));
+ }
+ for (var i = 0; i < xyy_five_date.length-1; i++) {
+	 xyy_five_date_list.push(xyy_five_date[i].trim());
+	 xyy_five_count_list.push(parseInt(xyy_five_count[i].trim()));
+ }
+ function getdata_range(week){
+	  if(typeof(week)=="string"){
+			var ss=  $.ajax({
+		 type:"get",
+		 url:"getdata_range_custom",
+		 data:{week:week},
+		 success:function(data){
+			 console.log("返回的日期区间是"+data);
+			 var da = '['+data.substr(6, 7);
+			 $("#vehicle_input").val(data);
+			 $("#vehicle_input_02").val(da);
+			 return data;
+		 },
+	  });
+	  }
+	return ss;
+}
+ function toThousands(num) {
+	    return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
+	}
+        // 路径配置
+        require.config({
+            paths: {
+                echarts: '<%=request.getContextPath() %>/echarts/dist'
+            }
+        });
+        
+        // 使用
+        require(
+            [
+                'echarts',
+                'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+                'echarts/chart/line'
+            ],
+            function (ec) {
+                // 基于准备好的dom，初始化echarts图表
+                var xyy_severn = ec.init(document.getElementById('xyy_severn'));
+                var xyy_five = ec.init(document.getElementById('xyy_five'));
+                
+                /* var xyy_half = ec.init(document.getElementById('xyy_half')); */
+                //新运营7天
+                var op_xyy_severn = {
+                		title : {
+                			  subtext:"（单位：万）",
+                			  subtextStyle:{
+                				  fontSize:9,
+                				  align:"left",
+                			  }
+                		    },
+                	    tooltip : {
+                	        trigger: 'axis'
+                	    },
+                	    grid:{
+                 	    	x:40,
+                 	    	y:60,
+                 	    	x2:30,
+                 	    	y2:40
+                 	    },
+                	    legend: {
+                	        data:['接入车辆数'],
+                	        textStyle:{
+                	        	fontSize:14,
+                	        	fontWeight:'bold'
+                	        },
+                	        x:'left',
+                	        y:'top'
+                	    },
+                	    xAxis : [
+                	        {
+                	            type : 'category',
+                	            boundaryGap : false,
+                	            axisLine:false,
+                	            axisTick:false,
+                	            data : xyy_list
+                	        }
+                	    ],
+                	    yAxis : [
+                	        {
+                	            type : 'value',
+                	            axisLine:false,
+                	            scale: true,  
+                	            axisLabel : {
+                	            	formatter: function (value){
+                	                	var n = value/10000;
+                	                	return n}
+                	            }
+                	        }
+                	    ],
+                	    series : [
+                	        {
+                	            name:'接入车辆数',
+                	            type:'line',
+                	            symbol:'emptyCircle',
+                	            data:xyy_count_list,
+                 	            itemStyle:{
+                 	                  normal:{color:'#37B7AD'}
+                 	              }
+                	        },
+                	    ]
+                	};
+                //新运营五周
+                var op_xyy_five = {
+                		title : {
+              			  subtext:"（单位：万）",
+              			  subtextStyle:{
+              				  fontSize:9,
+              				  align:"left",
+              			  }
+              		    },
+                	    tooltip : {
+                	        trigger: 'axis',
+                	        formatter:function(params,ticket,callback){
+                	    		var data_week = params[0][1];
+                	    		getdata_range(data_week);
+                	    	    setTimeout(function (){
+                	                // 仅为了模拟异步回调
+                	                callback(ticket, '第'+data_week+'周 ' +$("#vehicle_input_02").val()+'<br/>'+params[0][0]+':'+toThousands(params[0].data));
+                	            }, 200)
+                	    		return "Loading";
+                	    	}
+                	    },
+                	    grid:{
+                 	    	x:40,
+                 	    	y:60,
+                 	    	x2:30,
+                 	    	y2:40
+                 	    },
+                	    legend: {
+                	        data:['接入车辆数'],
+                	        x:"left",
+                	    },
+                	    xAxis : [
+                	        {
+                	            type : 'category',
+                	            boundaryGap : false,
+                	            axisLine:false,
+                	            axisTick:false,
+                	            axisLabel : {
+                   	                formatter: function (value){
+                   	                	var n = value;
+                   	                	return '第'+n+'周'}
+                   	            },
+                	            data : xyy_five_date_list
+                	        }
+                	    ],
+                	    yAxis : [
+                	        {
+                	            type : 'value',
+                	            axisLine:false,
+                	            scale: true, 
+                	            axisLabel : {
+                	            	formatter: function (value){
+                	                	var n = value/10000;
+                	                	return n}
+                	            }
+                	        }
+                	    ],
+                	    series : [
+                	        {
+                	            name:'接入车辆数',
+                	            type:'line',
+                	            
+                	            symbol:'emptyCircle',
+                	            data:xyy_five_count_list,
+                 	            itemStyle:{
+                 	                  normal:{color:'#37B7AD'}
+                 	              }
+                	        },
+                	    ]
+                	};
+                //新运营半年
+                var op_xyy_half = {
+                	    tooltip : {
+                	        trigger: 'axis'
+                	    },
+                	    grid:{
+                	    	x:50,
+                	    	y:30,
+                	    	x2:20,
+                	    	y2:20
+                	    },
+                	    legend: {
+                	        data:['接入车辆数'],
+                	        x:'left'
+                	    },
+                	    xAxis : [
+                	        {
+                	            type : 'category',
+                	            boundaryGap : false,
+                	            data : ['3.15','3.16','3.17','3.18','3.19','3.20','3.21']
+                	        }
+                	    ],
+                	    yAxis : [
+                	        {
+                	            type : 'value',
+                	            axisLabel : {
+                	                formatter: '{value}'
+                	            }
+                	        }
+                	    ],
+                	    series : [
+                	        {
+                	            name:'接入车辆数',
+                	            type:'line',
+                	            data:[119, 152, 169, 210, 250, 290, 310],
+                 	            itemStyle:{
+                 	                  normal:{color:'#37B7AD'}
+                 	              }
+                	        },
+                	    ]
+                	};
+        
+                // 为echarts对象加载数据 
+                xyy_severn.setOption(op_xyy_severn);
+                xyy_five.setOption(op_xyy_five);
+                /* xyy_half.setOption(op_xyy_half); */
+            }
+        );
+    </script>
+	
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+package com.guide.community.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.guide.community.mapper.CommunityKeshiMapper;
+import com.guide.community.pojo.CommunityKeshi;
+
+@Service("community_keshiService")
+public class CommunityKeshiServiceImpl implements CommunityKeshiService {
+	@Autowired
+	private CommunityKeshiMapper community_keshiMapper;
+
+	public List<CommunityKeshi> query() {
+		
+		return community_keshiMapper.query();
+	}
+
+}

@@ -1,0 +1,238 @@
+package com.guide.controller;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.guide.pojo.Course;
+import com.guide.pojo.CourseDoctorPatient;
+import com.guide.pojo.CoursePatientViewer;
+import com.guide.pojo.DateCourseReg;
+import com.guide.pojo.Doctor;
+import com.guide.pojo.Hospital;
+import com.guide.pojo.Keshi;
+import com.guide.pojo.User;
+import com.guide.service.CourseDoctorPatientService;
+import com.guide.service.CoursePatientViewerService;
+import com.guide.service.CourseService;
+import com.guide.service.DateCourseRegService;
+import com.guide.service.DoctorService;
+import com.guide.service.HospitalService;
+import com.guide.service.KeshiService;
+import com.guide.service.UserService;
+import com.guide.utils.JsonUtil;
+
+/**
+ * @author zhutong
+ * @WebServlet是Servlet3.0提供的注解， 目的是将一个继承了HttpServlet类的普通java类标注为一个Servlet
+ *                              UserServlet使用了@WebServlet标注之后， 就不需要在web .
+ *                              xml中配置了
+ */
+@Controller
+@RequestMapping("/")
+public class UserController {
+	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+	SimpleDateFormat fmr = new SimpleDateFormat("MM-dd");
+	DecimalFormat df = new DecimalFormat();
+	// 处理业务逻辑的userService
+	@Resource(name = "userService")
+	private UserService userService;
+	@Resource(name = "doctorService")
+	private DoctorService doctorService;
+	@Resource(name = "hospitalService")
+	private HospitalService hospitalService;
+	@Resource(name = "keshiService")
+	private KeshiService keshiService;
+	@Resource(name = "courseService")
+	private CourseService courseService;
+	@Resource(name = "datecourseregService")
+	private DateCourseRegService datecourseregService;
+	@Resource(name = "coursedoctorpatientService")
+	private CourseDoctorPatientService coursedoctorpatientService;
+	@Resource(name = "coursepatientviewerService")
+	private CoursePatientViewerService coursepatientviewerService;
+
+	// 修改密码-get
+	@RequestMapping(value = "change_pass", method = RequestMethod.GET)
+	public String change_pass(HttpServletRequest request, @RequestParam("username") String username) {
+		request.setAttribute("username", username);
+		return "change_pass";
+	}
+
+	// 修改密码-post
+	@RequestMapping(value = "change_pass", method = RequestMethod.POST)
+	public String change(HttpServletRequest request, @RequestParam("username") String username,
+			@RequestParam("password") String password) {
+		// 操作数据库，修改密码
+		User user = new User();
+		user.setUsername(username);
+		user.setPassword(password);
+		System.err.println("user is :" + user);
+		int u = userService.update(user);
+		if (u == 1) {
+			System.err.println("修改成功！" + u);
+		} else {
+			System.err.println(u);
+		}
+		return "login";
+	}
+
+	// 退出登录
+	@RequestMapping(value = "logout", method = RequestMethod.GET)
+	public String logout(HttpServletRequest request, HttpSession session) {
+		// 删除session登录信息
+		session.setAttribute("isLogin", false);
+		return "login";
+	}
+
+	// 登录验证
+	@ResponseBody
+	@RequestMapping(value = "Validate_b", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+	public String Validate_b(@RequestParam("username") String username, @RequestParam("password") String password,
+			HttpServletRequest request, HttpSession session, HttpServletResponse response) throws Exception {
+		HashMap<String, String> map = new HashMap<String, String>();
+		User users = new User();
+		users.setUsername(username);
+		users.setPassword(password);
+		session.setAttribute("username", username);
+		int u = userService.validate_user(username);
+		if (u != 0) {
+			int s = userService.validate_right(users);
+			if (s == 0) {
+				map.put("error_1", "用户名密码错误！");
+			} else {
+				map.put("success", "success");
+				session.setAttribute("isLogin", true);
+				addCookie(username, password, response, request);
+			}
+		} else {
+			map.put("error_0", "用户 <" + username + "> 不存在！");
+		}
+		return JsonUtil.map2json(map);
+	}
+
+	private void addCookie(String username, String password, HttpServletResponse response, HttpServletRequest request)
+			throws UnsupportedEncodingException {
+		if (!username.equals("") && !password.equals("")) {
+			// 创建Cookie
+			Cookie nameCookie = new Cookie("name", URLEncoder.encode(username, "utf-8"));
+			Cookie pswCookie = new Cookie("psw", password);
+			// 设置Cookie的父路径
+			nameCookie.setPath(request.getContextPath() + "/");
+			pswCookie.setPath(request.getContextPath() + "/");
+
+			// 获取是否保存Cookie
+			String rememberMe = request.getParameter("rember");
+			if (rememberMe == null || rememberMe.equals(false)) {// 不保存Cookie
+				nameCookie.setMaxAge(0);
+				pswCookie.setMaxAge(0);
+			} else {// 保存Cookie的时间长度，单位为秒
+				nameCookie.setMaxAge(7 * 24 * 60 * 60);
+				pswCookie.setMaxAge(7 * 24 * 60 * 60);
+			}
+			// 加入Cookie到响应头
+			response.addCookie(nameCookie);
+			response.addCookie(pswCookie);
+		}
+	}
+
+	// 登录验证---成功
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "hospital", method = RequestMethod.GET)
+	public String Validate(HttpServletRequest request) {
+		List<Doctor> doc_prov = doctorService.query_prov();
+		List<Doctor> doc_city = doctorService.query_city();
+		List<Hospital> hos_prov = hospitalService.query_prov();
+		List<Hospital> hos_city = hospitalService.query_city();
+		List<Keshi> keshi_list = keshiService.query();
+		
+		JSONArray Doc_arr_prov = new JSONArray();
+		for (Doctor doc : doc_prov) {
+			JSONObject Doc_obj = new JSONObject();
+			Doc_obj.put("name", doc.getProv_name());
+			Doc_obj.put("value", doc.getProv_num());
+			Doc_arr_prov.add(Doc_obj);
+		}
+		JSONArray Doc_arr_city = new JSONArray();
+		for (Doctor doc : doc_city) {
+			JSONObject Doc_obj = new JSONObject();
+			Doc_obj.put("name", doc.getCity_name());
+			Doc_obj.put("value", doc.getCity_num());
+			Doc_arr_city.add(Doc_obj);
+		}
+		JSONArray Hos_arr_prov = new JSONArray();
+		for (Hospital hos : hos_prov) {
+			JSONObject Hos_obj = new JSONObject();
+			Hos_obj.put("name", hos.getProv_name());
+			Hos_obj.put("value", hos.getProv_num());
+			Hos_arr_prov.add(Hos_obj);
+		}
+		JSONArray Hos_arr_city = new JSONArray();
+		for (Hospital hos : hos_city) {
+			JSONObject Hos_obj = new JSONObject();
+			Hos_obj.put("name", hos.getCity_name());
+			Hos_obj.put("value", hos.getCity_num());
+			Hos_arr_city.add(Hos_obj);
+		}
+		request.setAttribute("Doc_prov", Doc_arr_prov);
+		request.setAttribute("Doc_city", Doc_arr_city);
+		request.setAttribute("Hos_prov", Hos_arr_prov);
+		request.setAttribute("Hos_city", Hos_arr_city);
+		request.setAttribute("Pie_keshi", keshi_list);
+		return "hospital";
+	}
+	
+	@RequestMapping(value = "course", method = RequestMethod.GET)
+	public String course(HttpServletRequest request) {
+		List<Course> course_list = courseService.query();
+		request.setAttribute("Pie_course", course_list);
+		return "course";
+	}
+	@RequestMapping(value = "date", method = RequestMethod.GET)
+	public String date(HttpServletRequest request) {
+		List<DateCourseReg> datecoursereg_list = datecourseregService.query();
+		request.setAttribute("Line_date", datecoursereg_list);
+		return "date";
+	}
+	@RequestMapping(value = "patient", method = RequestMethod.GET)
+	public String patient(HttpServletRequest request) {
+		List<CourseDoctorPatient> CourseDoctorPatient_list = coursedoctorpatientService.query();
+		List<CoursePatientViewer> CoursePatientViewer_list = coursepatientviewerService.query();
+		request.setAttribute("Bar_doctor", CourseDoctorPatient_list);
+		request.setAttribute("Bar_viewer", CoursePatientViewer_list);
+		return "patient";
+	}
+	@RequestMapping(value = "ajaxcity_data", method = RequestMethod.GET,produces="text/plain;charset=UTF-8")
+	@ResponseBody
+	public String hypt(HttpServletRequest request,@RequestParam("selectedProvince") String selectedProvince) throws Exception {
+		selectedProvince = java.net.URLDecoder.decode(selectedProvince, "UTF-8");  
+		List<Doctor> list = doctorService.getdata_city(selectedProvince);
+		return JsonUtil.object2json(list);
+	}
+	
+	@RequestMapping(value = "ajaxhoscity_data", method = RequestMethod.GET,produces="text/plain;charset=UTF-8")
+	@ResponseBody
+	public String gethoscity_data(HttpServletRequest request,@RequestParam("selectedProvince") String selectedProvince) throws Exception {
+		selectedProvince = java.net.URLDecoder.decode(selectedProvince, "UTF-8");  
+		List<Hospital> list = hospitalService.getdata_city(selectedProvince);
+		return JsonUtil.object2json(list);
+	}
+}

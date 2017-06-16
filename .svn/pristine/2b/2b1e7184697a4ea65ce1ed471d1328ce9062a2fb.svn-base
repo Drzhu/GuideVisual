@@ -1,0 +1,313 @@
+package com.guide.controller;
+
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.Logger;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.guide.service.CourseDoctorPatientService;
+import com.guide.service.CoursePatientViewerService;
+import com.guide.service.CourseService;
+import com.guide.service.DateCourseRegService;
+import com.guide.service.DetailInfoService;
+import com.guide.service.DoctorService;
+import com.guide.service.HospitalService;
+import com.guide.service.KeshiService;
+import com.guide.community.pojo.CommunityDateCourseReg;
+import com.guide.community.pojo.CommunityDetailInfo;
+import com.guide.community.pojo.CommunityDoc;
+import com.guide.community.pojo.CommunityHospital;
+import com.guide.community.pojo.CommunityKecheng;
+import com.guide.community.pojo.CommunityKechengDoctorPatient;
+import com.guide.community.pojo.CommunityKechengPatientViewer;
+import com.guide.community.pojo.CommunityKeshi;
+import com.guide.community.service.CommunityDateCourseRegService;
+import com.guide.community.service.CommunityDetailInfoService;
+import com.guide.community.service.CommunityDocService;
+import com.guide.community.service.CommunityHospitalService;
+import com.guide.community.service.CommunityKechengDoctorPatientService;
+import com.guide.community.service.CommunityKechengPatientViewerService;
+import com.guide.community.service.CommunityKechengService;
+import com.guide.community.service.CommunityKeshiService;
+import com.guide.pojo.Course;
+import com.guide.pojo.CourseDoctorPatient;
+import com.guide.pojo.CoursePatientViewer;
+import com.guide.pojo.DateCourseReg;
+import com.guide.pojo.DetailInfo;
+import com.guide.pojo.Doctor;
+import com.guide.pojo.Hospital;
+import com.guide.pojo.Keshi;
+import com.guide.utils.JsonUtil;
+
+@Controller
+@RequestMapping("/")
+public class MobileController {
+	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+	SimpleDateFormat fmr = new SimpleDateFormat("MM-dd");
+	DecimalFormat df = new DecimalFormat();
+	// 处理业务逻辑的userService
+	@Resource(name = "doctorService")
+	private DoctorService doctorService;
+	@Resource(name = "hospitalService")
+	private HospitalService hospitalService;
+	@Resource(name = "keshiService")
+	private KeshiService keshiService;
+	@Resource(name = "courseService")
+	private CourseService courseService;
+	@Resource(name = "datecourseregService")
+	private DateCourseRegService datecourseregService;
+	@Resource(name = "coursedoctorpatientService")
+	private CourseDoctorPatientService coursedoctorpatientService;
+	@Resource(name = "coursepatientviewerService")
+	private CoursePatientViewerService coursepatientviewerService;
+	@Resource(name = "detailinfoService")
+	private DetailInfoService detailinfoService;
+	@Resource(name = "community_doctorService")
+	private CommunityDocService community_doctorService;
+	
+	@Resource(name = "community_hospitalService")
+	private CommunityHospitalService community_hospitalService;
+	
+	@Resource(name = "community_keshiService")
+	private CommunityKeshiService community_keshiService;
+	
+	@Resource(name = "community_kechengService")
+	private CommunityKechengService community_kechengService;
+	
+	@Resource(name = "community_date_course_regService")
+	private CommunityDateCourseRegService community_date_course_regService;
+	
+	@Resource(name = "community_kecheng_doctor_patientService")
+	private CommunityKechengDoctorPatientService community_kecheng_doctor_patientService;
+	
+	@Resource(name = "community_kecheng_patient_viewerService")
+	private CommunityKechengPatientViewerService community_kecheng_patient_viewerService;
+	
+	@Resource(name = "community_detail_infoService")
+	private CommunityDetailInfoService community_detail_infoService;
+	private Logger logger;
+
+	public MobileController() {
+		this.logger = Logger.getLogger(MobileController.class);
+	}
+	//全国医生获取省内各市
+	@RequestMapping(value = "getcity_data", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+	@ResponseBody
+	public String getcity_data(HttpServletRequest request, @RequestParam("selectedProvince") String selectedProvince)
+			throws Exception {
+		selectedProvince = java.net.URLDecoder.decode(selectedProvince, "UTF-8");
+		List<Doctor> list = doctorService.getdata_city(selectedProvince);
+		return JsonUtil.object2json(list);
+	}
+	//全国医院获取省内各市数据
+	@RequestMapping(value = "gethoscity_data", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+	@ResponseBody
+	public String gethoscity_data(HttpServletRequest request, @RequestParam("selectedProvince") String selectedProvince)
+			throws Exception {
+		selectedProvince = java.net.URLDecoder.decode(selectedProvince, "UTF-8");
+		List<Hospital> list = hospitalService.getdata_city(selectedProvince);
+		return JsonUtil.object2json(list);
+	}
+	//立普妥-搜索按钮跳转
+	@RequestMapping(value = "mobile_lpt_info", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+	public String query(HttpServletRequest request) {
+		return "mobile/query_lpt1";
+	}
+	//社区医生-搜索按钮跳转
+	@RequestMapping(value = "mobile_community_info", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+	public String community_query(HttpServletRequest request) {
+		return "mobile/query_lpt2";
+	}
+	//手机端入口
+	@RequestMapping(value = "open", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+	public String main(HttpServletRequest request) {
+		return "mobile/mobile_go";
+	}
+	//立普妥主页
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "mobile_lpt1", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+	public String mobile_lpt1(HttpServletRequest request) {
+		List<Doctor> doc_prov = doctorService.query_prov();
+		List<Doctor> doc_city = doctorService.query_city();
+		List<Hospital> hos_prov = hospitalService.query_prov();
+		List<Hospital> hos_city = hospitalService.query_city();
+		List<Keshi> keshi_list = keshiService.query();
+		List<Course> course_list = courseService.query();
+		List<DateCourseReg> datecoursereg_list = datecourseregService.query();
+		List<CourseDoctorPatient> CourseDoctorPatient_list = coursedoctorpatientService.query();
+		List<CoursePatientViewer> CoursePatientViewer_list = coursepatientviewerService.query();
+		JSONArray Doc_arr_prov = new JSONArray();
+		for (Doctor doc : doc_prov) {
+			JSONObject Doc_obj = new JSONObject();
+			Doc_obj.put("name", doc.getProv_name());
+			Doc_obj.put("value", doc.getProv_num());
+			Doc_arr_prov.add(Doc_obj);
+		}
+		JSONArray Doc_arr_city = new JSONArray();
+		for (Doctor doc : doc_city) {
+			JSONObject Doc_obj = new JSONObject();
+			Doc_obj.put("name", doc.getCity_name());
+			Doc_obj.put("value", doc.getCity_num());
+			Doc_arr_city.add(Doc_obj);
+		}
+		JSONArray Hos_arr_prov = new JSONArray();
+		for (Hospital hos : hos_prov) {
+			JSONObject Hos_obj = new JSONObject();
+			Hos_obj.put("name", hos.getProv_name());
+			Hos_obj.put("value", hos.getProv_num());
+			Hos_arr_prov.add(Hos_obj);
+		}
+		JSONArray Hos_arr_city = new JSONArray();
+		for (Hospital hos : hos_city) {
+			JSONObject Hos_obj = new JSONObject();
+			Hos_obj.put("name", hos.getCity_name());
+			Hos_obj.put("value", hos.getCity_num());
+			Hos_arr_city.add(Hos_obj);
+		}
+		request.setAttribute("Doc_prov", Doc_arr_prov);
+		request.setAttribute("Doc_prov1", Doc_arr_prov.toJSONString());
+		request.setAttribute("Doc_city", Doc_arr_city);
+		request.setAttribute("Doc_city1", Doc_arr_city.toJSONString());
+		request.setAttribute("Hos_prov", Hos_arr_prov);
+		request.setAttribute("Hos_prov1", Hos_arr_prov.toJSONString());
+		request.setAttribute("Hos_city", Hos_arr_city);
+		request.setAttribute("Hos_city1", Hos_arr_city.toJSONString());
+		request.setAttribute("Pie_keshi", keshi_list);
+		request.setAttribute("Pie_course", course_list);
+		request.setAttribute("Line_date", datecoursereg_list);
+		request.setAttribute("Bar_doctor", CourseDoctorPatient_list);
+		request.setAttribute("Bar_viewer", CoursePatientViewer_list);
+		return "mobile/mobile_lpt1";
+	}
+	//社区主页
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "mobile_lpt2", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+	public String mobile_lpt2(HttpServletRequest request) {
+		List<CommunityDoc> doc_prov = community_doctorService.community_query_prov();
+		List<CommunityDoc> doc_city = community_doctorService.query_city();
+		List<CommunityHospital> hos_prov = community_hospitalService.query_prov();
+		List<CommunityHospital> hos_city = community_hospitalService.query_city();
+		List<CommunityKeshi> keshi_list = community_keshiService.query();
+		List<CommunityKecheng> course_list = community_kechengService.query();
+		List<CommunityDateCourseReg> datecoursereg_list = community_date_course_regService.query();
+		List<CommunityKechengDoctorPatient> CourseDoctorPatient_list = community_kecheng_doctor_patientService.query();
+		List<CommunityKechengPatientViewer> CoursePatientViewer_list = community_kecheng_patient_viewerService.query();
+		JSONArray Doc_arr_prov = new JSONArray();
+		for (CommunityDoc doc : doc_prov) {
+			JSONObject Doc_obj = new JSONObject();
+			Doc_obj.put("name", doc.getProv_name());
+			Doc_obj.put("value", doc.getProv_num());
+			Doc_arr_prov.add(Doc_obj);
+		}
+		JSONArray Doc_arr_city = new JSONArray();
+		for (CommunityDoc doc : doc_city) {
+			JSONObject Doc_obj = new JSONObject();
+			Doc_obj.put("name", doc.getCity_name());
+			Doc_obj.put("value", doc.getCity_num());
+			Doc_arr_city.add(Doc_obj);
+		}
+		JSONArray Hos_arr_prov = new JSONArray();
+		for (CommunityHospital hos : hos_prov) {
+			JSONObject Hos_obj = new JSONObject();
+			Hos_obj.put("name", hos.getProv_name());
+			Hos_obj.put("value", hos.getProv_num());
+			Hos_arr_prov.add(Hos_obj);
+		}
+		JSONArray Hos_arr_city = new JSONArray();
+		for (CommunityHospital hos : hos_city) {
+			JSONObject Hos_obj = new JSONObject();
+			Hos_obj.put("name", hos.getCity_name());
+			Hos_obj.put("value", hos.getCity_num());
+			Hos_arr_city.add(Hos_obj);
+		}
+		request.setAttribute("Doc_prov", Doc_arr_prov);
+		request.setAttribute("Doc_prov1", Doc_arr_prov.toJSONString());
+		request.setAttribute("Doc_city", Doc_arr_city);
+		request.setAttribute("Doc_city1", Doc_arr_city.toJSONString());
+		request.setAttribute("Hos_prov", Hos_arr_prov);
+		request.setAttribute("Hos_prov1", Hos_arr_prov.toJSONString());
+		request.setAttribute("Hos_city", Hos_arr_city);
+		request.setAttribute("Hos_city1", Hos_arr_city.toJSONString());
+		request.setAttribute("Pie_keshi", keshi_list);
+		request.setAttribute("Pie_course", course_list);
+		request.setAttribute("Line_date", datecoursereg_list);
+		request.setAttribute("Bar_doctor", CourseDoctorPatient_list);
+		request.setAttribute("Bar_viewer", CoursePatientViewer_list);
+		return "mobile/mobile_lpt2";
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "lpt_datatable_query", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+	@ResponseBody
+	public String lpt_datatable_query(HttpServletRequest request, @RequestParam("search[value]") String search,
+			@RequestParam("draw") int draw, @RequestParam("start") int start) throws Exception {
+		/*String str = new String((request.getParameter("search[value]")).getBytes("iso-8859-1"), "utf-8");*/
+		String str = request.getParameter("search[value]");
+		if (str.contains("\"")) {
+			str = str.replace(str.substring(str.indexOf("\""), str.length()), "");
+		}
+		int len = detailinfoService.query_count(str);
+		List<DetailInfo> list = detailinfoService.datatable_query(start, str);
+		JSONObject json = new JSONObject();
+		List<List<String>> list1 = new ArrayList<List<String>>();
+		List<String> list2 = new ArrayList<String>();
+
+		for (DetailInfo i : list) {
+			list2.add(i.getCity_name());
+			list2.add(i.getDoctor_name());
+			list2.add(i.getHospital_name());
+			list2.add(i.getKeshi_name());
+			list1.add(list2);
+			list2 = new ArrayList<String>();
+		}
+		json.put("data", list1);
+		json.put("recordsTotal", len);
+		json.put("recordsFiltered", len);
+		json.put("draw", draw);
+		return json.toJSONString();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "community_datatable_query", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+	@ResponseBody
+	public String community_datatable_query(HttpServletRequest request, @RequestParam("search[value]") String search,
+			@RequestParam("draw") int draw, @RequestParam("start") int start) throws Exception {
+		/*String str = new String((request.getParameter("search[value]")).getBytes("iso-8859-1"), "utf-8");*/
+		String str = request.getParameter("search[value]");
+		if (str.contains("\"")) {
+			str = str.replace(str.substring(str.indexOf("\""), str.length()), "");
+		}
+		int len = community_detail_infoService.query_count(str);
+		List<CommunityDetailInfo> list = community_detail_infoService.datatable_query(start, str);
+		JSONObject json = new JSONObject();
+		List<List<String>> list1 = new ArrayList<List<String>>();
+		List<String> list2 = new ArrayList<String>();
+
+		for (CommunityDetailInfo i : list) {
+			list2.add(i.getCity_name());
+			list2.add(i.getDoctor_name());
+			list2.add(i.getHospital_name());
+			list2.add(i.getKeshi_name());
+			list1.add(list2);
+			list2 = new ArrayList<String>();
+		}
+		json.put("data", list1);
+		json.put("recordsTotal", len);
+		json.put("recordsFiltered", len);
+		json.put("draw", draw);
+		return json.toJSONString();
+
+	}
+}

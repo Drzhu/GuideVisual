@@ -1,0 +1,8 @@
+package com.backup;
+
+import java.util.List;
+
+public interface CommunityKeshiMapper {
+	
+	List<CommunityKeshi> query();
+}

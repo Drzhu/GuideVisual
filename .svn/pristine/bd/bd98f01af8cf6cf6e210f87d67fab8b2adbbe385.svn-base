@@ -1,0 +1,16 @@
+package com.guide.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.guide.pojo.DetailInfo;
+
+public interface DetailInfoMapper {
+
+	List<DetailInfo> query_keshi(String keshi_name);
+
+	List<DetailInfo> datatable_query(@Param("start") int start, @Param("keshi_name") String keshi_name);
+
+	int query_count(@Param("str")  String str);
+}

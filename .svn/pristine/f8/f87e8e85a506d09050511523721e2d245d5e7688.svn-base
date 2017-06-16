@@ -1,0 +1,60 @@
+<%@ page language="java" pageEncoding="UTF-8"%>
+<%--引入JSTL核心标签库 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="renderer" content="webkit">
+<link rel="stylesheet" type="text/css" href="font-awesome-4.6.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="css/css.css" />
+<link rel="stylesheet" type="text/css" href="css/animate.min.css" />
+<link rel="shortcut icon" href="img/guide.ico" />
+<title>中交数据中心</title>
+<style type="text/css">
+	body{
+		background: url(img/gobg.jpg) no-repeat 40% 10%;
+	}
+	.show-box{
+		width:80%;
+		padding: 0;
+	    margin: 18% auto 10% auto;
+	    list-style: none;
+	}
+	.show-box>li>button{
+		border:none;
+	    font-size: 2.4rem;
+	    padding: 3rem;
+	    color: #FFF;
+	    width: 100%;
+	    margin-bottom: 2rem;
+	}
+	.show-box .block1{background-color:#30A5FF;}	
+	.show-box .block2{background-color:#FFB848;}
+	.show-box .block3{background-color:#28B779;}
+	.show-box .block1:hover{background-color:#0080dd;}
+	.show-box .block2:hover{background-color:#f79400;}
+	.show-box .block3:hover{background-color:#209362;}
+</style>
+</head>
+<body>
+	<ul class="show-box">
+		<li>
+			<button type="button" id="block1" class="block1">立普妥一期</button>
+		</li>
+		<li>
+			<button type="button" id="block2" class="block2">立普妥二期</button>
+		</li>
+		<li>
+			<button type="button" id="block3" class="block3" disabled="disabled">立普妥三期</button>
+		</li>
+	</ul>
+
+</body>
+</html>

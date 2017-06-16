@@ -1,0 +1,19 @@
+package com.backup;
+
+import java.util.List;
+
+public interface CommunityDateCourseRegMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(CommunityDateCourseReg record);
+
+    int insertSelective(CommunityDateCourseReg record);
+
+    CommunityDateCourseReg selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(CommunityDateCourseReg record);
+
+    int updateByPrimaryKey(CommunityDateCourseReg record);
+
+	List<CommunityDateCourseReg> query();
+}

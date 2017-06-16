@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings>
+		<setting name="cacheEnabled" value="true" />
+	</settings>
+	<typeAliases>
+		<typeAlias type="com.guide.pojo.User" alias="user" />
+		<typeAlias type="com.guide.pojo.Doctor" alias="doctor" />
+		<typeAlias type="com.guide.pojo.Keshi" alias="keshi" />
+		<typeAlias type="com.guide.pojo.Course" alias="course" />
+		<typeAlias type="com.guide.pojo.Hospital" alias="hospital" />
+		<typeAlias type="com.guide.pojo.DateCourseReg" alias="date_course_reg" />
+		<typeAlias type="com.guide.pojo.CourseDoctorPatient" alias="course_doctor_patient" />
+		<typeAlias type="com.guide.pojo.CoursePatientViewer" alias="course_patient_viewer" />
+		<typeAlias type="com.guide.pojo.Projecter" alias="projecter" />
+		<typeAlias type="com.guide.pojo.Project" alias="project" />
+	</typeAliases>
+	<mappers>
+		<mapper resource="com/guide/mapper/UserMapper.xml" />
+		<mapper resource="com/guide/mapper/DoctorMapper.xml" />
+		<mapper resource="com/guide/mapper/HospitalMapper.xml" />
+		<mapper resource="com/guide/mapper/KeshiMapper.xml" />
+		<mapper resource="com/guide/mapper/CourseMapper.xml" />
+		<mapper resource="com/guide/mapper/DateCourseRegMapper.xml" />
+		<mapper resource="com/guide/mapper/CourseDoctorPatientMapper.xml" />
+		<mapper resource="com/guide/mapper/CoursePatientViewerMapper.xml" />
+		<mapper resource="com/guide/mapper/ProjecterMapper.xml" />
+		<mapper resource="com/guide/mapper/ProjectMapper.xml" />
+	</mappers>
+</configuration>

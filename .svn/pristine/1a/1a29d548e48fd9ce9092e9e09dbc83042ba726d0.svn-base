@@ -1,0 +1,124 @@
+<%@ page language="java" pageEncoding="UTF-8"%>
+<%--引入JSTL核心标签库 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<!doctype html>
+<html lang="">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>盖德数据展示中心</title>
+
+<link rel="stylesheet" href="styles/main.css">
+
+</head>
+<body>
+<%  
+    String name="";  
+    String psw="";  
+    String checked="";  
+    Cookie[] cookies=request.getCookies();  
+    if(cookies!=null&&cookies.length>0){   
+        //遍历Cookie  
+        for(int i=0;i<cookies.length;i++){  
+            Cookie cookie=cookies[i];  
+            //此处类似与Map有name和value两个字段,name相等才赋值,并处理编码问题   
+            if("name".equals(cookie.getName())){  
+                name=java.net.URLDecoder.decode(cookie.getValue(),"utf-8");  
+                //将"记住我"设置为勾选   
+                checked="checked";  
+            }  
+            if("psw".equals(cookie.getName())){  
+                psw=cookie.getValue();  
+            }  
+        }  
+    }  
+ %>  
+<header></header>
+<article class="container">
+	<section class="logo-box">
+		<img src="images/logo.png" alt="">
+	</section>
+	<section class="form-box">
+		<ul class="text-box">
+			<li>
+				<i><img src="images/m-icon.png" alt=""></i>
+				<input id="mobileNum" type="text" placeholder="请输入用户名" value="<%=name %>">
+			</li>
+			<li>
+				<i><img src="images/p-icon.png" alt=""></i>
+				<input id="password" type="password" placeholder="请输入密码" value="<%=psw %>">
+			</li>
+		</ul>
+		<div id="remberBtn" class="rember-box">
+			<img src="images/checkbox-icon.png" alt="" >
+			<span>记住密码</span>
+		</div>
+		<div class="login-box">
+			<div id="loginBtn" class="login-btn">登录</div>
+			<p class="nodes">登录权限申请请联系盖德数据中心</p>		
+		</div>
+	</section>
+</article>
+
+<footer></footer>
+
+<script src="scripts/zepto.min.js"></script>
+
+<script src="scripts/main.js"></script>
+
+<script>
+	$(function(){
+		$('#remberBtn').data('rember', false);
+		// -- 记住密码 @type boolean @name data-rember
+		$('#remberBtn').on(oTools.clickEvent, function(){
+			var $_this = $(this);
+			var selected = $_this.data('rember');
+			if (selected != true) {
+				$_this.data('rember', true);
+				$_this.find('img').attr('src', 'images/checkbox-s-icon.png');
+			} else {
+				$_this.data('rember', false);
+				$_this.find('img').attr('src', 'images/checkbox-icon.png');
+			}
+		});
+	$('#loginBtn').on(oTools.clickEvent, function(){
+		var reqData = {
+				mobile: $('#mobileNum').val(),
+				password: $('#password').val(),
+			};
+		console.log(reqData);
+	// -- 手机号验证
+	if(isNull(reqData.mobile)){
+		alert('请输入用户名！');
+		return false;
+	}
+	if(isNull(reqData.password)){
+		alert('请输入密码！');
+		return false;
+	}
+	var mobile= $('#mobileNum').val();
+	var password= $('#password').val();
+	var rember =$('#remberBtn').data('rember');
+	/* $.post("Validate_b",{"username":mobile,"password":password},function(res){ */
+		$.ajax({type: "POST",url:"Validate_b",data:{username:mobile,password:password,rember:rember},success:function(res){
+		var obj = eval('(' + res + ')');
+		for(var i in obj){
+			if(i=="success"){
+				window.location.href="Validate"; 		
+			}
+			if(i=="error_0"){
+				alert(obj[i]);
+			}
+			if(i=="error_1"){
+				alert(obj[i]); 		
+			}
+		}
+	},contentType:"application/x-www-form-urlencoded;charset=UTF-8"});
+	});
+	});
+</script>
+
+</body>
+</html>

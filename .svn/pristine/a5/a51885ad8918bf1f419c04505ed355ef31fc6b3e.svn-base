@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.guide.community.mapper.CommunityKeshiMapper">
+	<select id="query" resultType="CommunityKeshi">
+		select keshi_name,keshi_num from
+		community_keshi order by keshi_num*1 desc;
+	</select>
+</mapper>

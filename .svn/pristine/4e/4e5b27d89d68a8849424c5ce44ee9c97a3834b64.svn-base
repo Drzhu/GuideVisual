@@ -1,0 +1,42 @@
+<%@ page language="java" pageEncoding="UTF-8"%>
+<%--引入JSTL核心标签库 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="renderer" content="webkit">
+<link rel="stylesheet" type="text/css" href="font-awesome-4.6.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="css/manage_css/css.css" />
+<link rel="stylesheet" type="text/css" href="css/supersized.css" />
+<link rel="shortcut icon" href="img/guide.ico" />
+<title>用户登录</title>
+</head>
+<script src="js/jquery-3.1.0.min.js"></script>
+<body>
+	<button id="aa" onclick="getHosTable('心内科')">query</button>
+	<script type="text/javascript">
+	
+	function getHosTable(selectedProvince){
+		alert(selectedProvince);
+		 $.ajax({
+    		 type:"get",
+    		 url:"query_keshi",
+    		 data:{keshi_name:encodeURI(selectedProvince)},
+    		 success:function(data){
+    			 var obj = eval('(' + data + ')');
+    			 console.log(obj);
+    		 },
+    	  });
+	}
+	</script>
+</body>
+</html>
+
+

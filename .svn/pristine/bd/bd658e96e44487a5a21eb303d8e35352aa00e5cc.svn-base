@@ -1,0 +1,178 @@
+package com.guide.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.Logger;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.guide.pojo.Course;
+import com.guide.pojo.CourseDoctorPatient;
+import com.guide.pojo.CoursePatientViewer;
+import com.guide.pojo.DateCourseReg;
+import com.guide.pojo.DetailInfo;
+import com.guide.pojo.Doctor;
+import com.guide.pojo.Hospital;
+import com.guide.pojo.Keshi;
+import com.guide.service.CourseDoctorPatientService;
+import com.guide.service.CoursePatientViewerService;
+import com.guide.service.CourseService;
+import com.guide.service.DateCourseRegService;
+import com.guide.service.DetailInfoService;
+import com.guide.service.DoctorService;
+import com.guide.service.HospitalService;
+import com.guide.service.KeshiService;
+import com.guide.utils.JsonUtil;
+@Controller
+@RequestMapping("/lpt1")
+public class LPT1Controller {
+	@Resource(name = "doctorService")
+	private DoctorService doctorService;
+	@Resource(name = "hospitalService")
+	private HospitalService hospitalService;
+	@Resource(name = "keshiService")
+	private KeshiService keshiService;
+	@Resource(name = "courseService")
+	private CourseService courseService;
+	@Resource(name = "datecourseregService")
+	private DateCourseRegService datecourseregService;
+	@Resource(name = "coursedoctorpatientService")
+	private CourseDoctorPatientService coursedoctorpatientService;
+	@Resource(name = "coursepatientviewerService")
+	private CoursePatientViewerService coursepatientviewerService;
+	@Resource(name = "detailinfoService")
+	private DetailInfoService detailinfoService;
+	private Logger logger;
+	public LPT1Controller() {
+		this.logger = Logger.getLogger(LPT1Controller.class); 
+	}
+	// 登录验证---成功
+		@SuppressWarnings("unchecked")
+		@RequestMapping(value = "hospital", method = RequestMethod.GET)
+		public String Validate(HttpServletRequest request) {
+			List<Doctor> doc_prov = doctorService.query_prov();
+			List<Doctor> doc_city = doctorService.query_city();
+			List<Hospital> hos_prov = hospitalService.query_prov();
+			List<Hospital> hos_city = hospitalService.query_city();
+			List<Keshi> keshi_list = keshiService.query();
+			JSONArray Doc_arr_prov = new JSONArray();
+			for (Doctor doc : doc_prov) {
+				JSONObject Doc_obj = new JSONObject();
+				Doc_obj.put("name", doc.getProv_name());
+				Doc_obj.put("value", doc.getProv_num());
+				Doc_arr_prov.add(Doc_obj);
+			}
+			JSONArray Doc_arr_city = new JSONArray();
+			for (Doctor doc : doc_city) {
+				JSONObject Doc_obj = new JSONObject();
+				Doc_obj.put("name", doc.getCity_name());
+				Doc_obj.put("value", doc.getCity_num());
+				Doc_arr_city.add(Doc_obj);
+			}
+			JSONArray Hos_arr_prov = new JSONArray();
+			for (Hospital hos : hos_prov) {
+				JSONObject Hos_obj = new JSONObject();
+				Hos_obj.put("name", hos.getProv_name());
+				Hos_obj.put("value", hos.getProv_num());
+				Hos_arr_prov.add(Hos_obj);
+			}
+			JSONArray Hos_arr_city = new JSONArray();
+			for (Hospital hos : hos_city) {
+				JSONObject Hos_obj = new JSONObject();
+				Hos_obj.put("name", hos.getCity_name());
+				Hos_obj.put("value", hos.getCity_num());
+				Hos_arr_city.add(Hos_obj);
+			}
+			request.setAttribute("Doc_prov", Doc_arr_prov);
+			request.setAttribute("Doc_city", Doc_arr_city);
+			request.setAttribute("Hos_prov", Hos_arr_prov);
+			request.setAttribute("Hos_city", Hos_arr_city);
+			request.setAttribute("Pie_keshi", keshi_list);
+			return "lpt_1/hospital";
+		}
+		
+		@RequestMapping(value = "course", method = RequestMethod.GET)
+		public String course(HttpServletRequest request) {
+			List<Course> course_list = courseService.query();
+			request.setAttribute("Pie_course", course_list);
+			logger.info("全国科室"+course_list.toString());
+			return "lpt_1/course";
+		}
+		@RequestMapping(value = "date", method = RequestMethod.GET)
+		public String date(HttpServletRequest request) {
+			List<DateCourseReg> datecoursereg_list = datecourseregService.query();
+			request.setAttribute("Line_date", datecoursereg_list);
+			logger.info("日期注册数"+datecoursereg_list.toString());
+			return "lpt_1/date";
+		}
+		@RequestMapping(value = "query_detailinfo", method = RequestMethod.GET)
+		public String query_detailinfo(HttpServletRequest request) {
+			return "lpt_1/query_detailinfo";
+		}
+		@RequestMapping(value = "patient", method = RequestMethod.GET)
+		public String patient(HttpServletRequest request) {
+			List<CourseDoctorPatient> CourseDoctorPatient_list = coursedoctorpatientService.query();
+			List<CoursePatientViewer> CoursePatientViewer_list = coursepatientviewerService.query();
+			request.setAttribute("Bar_doctor", CourseDoctorPatient_list);
+			request.setAttribute("Bar_viewer", CoursePatientViewer_list);
+			return "lpt_1/patient";
+		}
+		@RequestMapping(value = "ajaxcity_data", method = RequestMethod.GET,produces="text/plain;charset=UTF-8")
+		@ResponseBody
+		public String hypt(HttpServletRequest request,@RequestParam("selectedProvince") String selectedProvince) throws Exception {
+			selectedProvince = java.net.URLDecoder.decode(selectedProvince, "UTF-8");  
+			List<Doctor> list = doctorService.getdata_city(selectedProvince);
+			return JsonUtil.object2json(list);
+		}
+		
+		@RequestMapping(value = "ajaxhoscity_data", method = RequestMethod.GET,produces="text/plain;charset=UTF-8")
+		@ResponseBody
+		public String gethoscity_data(HttpServletRequest request,@RequestParam("selectedProvince") String selectedProvince) throws Exception {
+			selectedProvince = java.net.URLDecoder.decode(selectedProvince, "UTF-8");  
+			List<Hospital> list = hospitalService.getdata_city(selectedProvince);
+			return JsonUtil.object2json(list);
+		}
+		@SuppressWarnings("unchecked")
+		@RequestMapping(value = "datatable_query", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+		@ResponseBody
+		public String datatable_query(HttpServletRequest request, @RequestParam("search[value]") String search,
+				@RequestParam("draw") int draw, @RequestParam("start") int start) throws Exception {
+			String str = new String((request.getParameter("search[value]")).getBytes("iso-8859-1"), "utf-8");
+			if (str == "" || str.equals("")) {
+				str = "心内";
+			}
+			if (str.endsWith("'")) {
+				str = str.substring(0, str.length() - 1);
+			}
+			int len = detailinfoService.query_count(str);
+			List<DetailInfo> list = detailinfoService.datatable_query(start, str);
+			JSONObject json = new JSONObject();
+			List<List<String>> list1 = new ArrayList<List<String>>();
+			List<String> list2 = new ArrayList<String>();
+
+			for (DetailInfo i : list) {
+				list2.add(i.getCity_name());
+				list2.add(i.getDoctor_name());
+				list2.add(i.getHospital_name());
+				list2.add(i.getKeshi_name());
+				list1.add(list2);
+				list2 = new ArrayList<String>();
+			}
+			json.put("data", list1);
+			json.put("recordsTotal", len);
+			json.put("recordsFiltered", len);
+			json.put("draw", draw);
+			return json.toJSONString();
+
+		}
+
+}

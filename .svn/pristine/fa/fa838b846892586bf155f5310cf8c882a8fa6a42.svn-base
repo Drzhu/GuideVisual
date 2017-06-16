@@ -1,0 +1,20 @@
+package com.guide.community.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.guide.community.mapper.CommunityKechengMapper;
+import com.guide.community.pojo.CommunityKecheng;
+
+@Service("community_kechengService")
+public class CommunityKechengServiceImpl implements CommunityKechengService {
+	@Autowired
+	private CommunityKechengMapper courseMapper;
+
+	public List<CommunityKecheng> query() {
+		return courseMapper.query();
+	}
+
+}

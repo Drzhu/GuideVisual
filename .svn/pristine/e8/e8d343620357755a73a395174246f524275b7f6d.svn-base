@@ -1,0 +1,21 @@
+package com.guide.community.mapper;
+
+import java.util.List;
+
+import com.guide.community.pojo.CommunityKechengDoctorPatient;
+
+public interface CommunityKechengDoctorPatientMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(CommunityKechengDoctorPatient record);
+
+    int insertSelective(CommunityKechengDoctorPatient record);
+
+    CommunityKechengDoctorPatient selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(CommunityKechengDoctorPatient record);
+
+    int updateByPrimaryKey(CommunityKechengDoctorPatient record);
+
+	List<CommunityKechengDoctorPatient> query();
+}

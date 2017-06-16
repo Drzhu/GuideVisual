@@ -1,0 +1,25 @@
+package com.backup;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service("detailinfoService")
+public class DetailInfoServiceImpl implements DetailInfoService {
+	@Autowired
+	private DetailInfoMapper detailInfoMapper;
+
+	public List<DetailInfo> query_keshi(String keshi_name) {
+		return detailInfoMapper.query_keshi(keshi_name);
+	}
+
+	public List<DetailInfo> datatable_query(int start, String keshi_name) {
+		return detailInfoMapper.datatable_query(start,keshi_name);
+	}
+
+	public int query_count(String str) {
+		return detailInfoMapper.query_count(str);
+	}
+
+}

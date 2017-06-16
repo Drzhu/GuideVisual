@@ -1,0 +1,168 @@
+package com.backup;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.Logger;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.guide.utils.JsonUtil;
+@Controller
+@RequestMapping("/community")
+public class CommunityController {
+	@Resource(name = "community_doctorService")
+	private CommunityDocService community_doctorService;
+	
+	@Resource(name = "community_hospitalService")
+	private CommunityHospitalService community_hospitalService;
+	
+	@Resource(name = "community_keshiService")
+	private CommunityKeshiService community_keshiService;
+	
+	@Resource(name = "community_kechengService")
+	private CommunityKechengService community_kechengService;
+	
+	@Resource(name = "community_date_course_regService")
+	private CommunityDateCourseRegService community_date_course_regService;
+	
+	@Resource(name = "community_kecheng_doctor_patientService")
+	private CommunityKechengDoctorPatientService community_kecheng_doctor_patientService;
+	
+	@Resource(name = "community_kecheng_patient_viewerService")
+	private CommunityKechengPatientViewerService community_kecheng_patient_viewerService;
+	
+	@Resource(name = "community_detail_infoService")
+	private CommunityDetailInfoService community_detail_infoService;
+	
+	private Logger logger;
+	public CommunityController() {
+		this.logger = Logger.getLogger(CommunityController.class); 
+	}
+	// 登录验证---成功
+		@SuppressWarnings("unchecked")
+		@RequestMapping(value = "hospital", method = RequestMethod.GET)
+		public String comValidate(HttpServletRequest request) {
+			List<CommunityDoc> doc_prov = community_doctorService.community_query_prov();
+			List<CommunityDoc> doc_city = community_doctorService.query_city();
+			List<CommunityHospital> hos_prov = community_hospitalService.query_prov();
+			List<CommunityHospital> hos_city = community_hospitalService.query_city();
+			List<CommunityKeshi> keshi_list = community_keshiService.query();
+			JSONArray Doc_arr_prov = new JSONArray();
+			for (CommunityDoc doc : doc_prov) {
+				JSONObject Doc_obj = new JSONObject();
+				Doc_obj.put("name", doc.getProv_name());
+				Doc_obj.put("value", doc.getProv_num());
+				Doc_arr_prov.add(Doc_obj);
+			}
+			JSONArray Doc_arr_city = new JSONArray();
+			for (CommunityDoc doc : doc_city) {
+				JSONObject Doc_obj = new JSONObject();
+				Doc_obj.put("name", doc.getCity_name());
+				Doc_obj.put("value", doc.getCity_num());
+				Doc_arr_city.add(Doc_obj);
+			}
+			JSONArray Hos_arr_prov = new JSONArray();
+			for (CommunityHospital hos : hos_prov) {
+				JSONObject Hos_obj = new JSONObject();
+				Hos_obj.put("name", hos.getProv_name());
+				Hos_obj.put("value", hos.getProv_num());
+				Hos_arr_prov.add(Hos_obj);
+			}
+			JSONArray Hos_arr_city = new JSONArray();
+			for (CommunityHospital hos : hos_city) {
+				JSONObject Hos_obj = new JSONObject();
+				Hos_obj.put("name", hos.getCity_name());
+				Hos_obj.put("value", hos.getCity_num());
+				Hos_arr_city.add(Hos_obj);
+			}
+			request.setAttribute("Doc_prov", Doc_arr_prov);
+			request.setAttribute("Doc_city", Doc_arr_city);
+			request.setAttribute("Hos_prov", Hos_arr_prov);
+			request.setAttribute("Hos_city", Hos_arr_city);
+			request.setAttribute("Pie_keshi", keshi_list);
+			return "community/hospital";
+		}
+		
+		@RequestMapping(value = "course", method = RequestMethod.GET)
+		public String course(HttpServletRequest request) {
+			List<CommunityKecheng> course_list = community_kechengService.query();
+			request.setAttribute("Pie_course", course_list);
+			return "community/course";
+		}
+		@RequestMapping(value = "date", method = RequestMethod.GET)
+		public String date(HttpServletRequest request) {
+			List<CommunityDateCourseReg> datecoursereg_list = community_date_course_regService.query();
+			request.setAttribute("Line_date", datecoursereg_list);
+			return "community/date";
+		}
+		@RequestMapping(value = "query_detailinfo", method = RequestMethod.GET)
+		public String query_detailinfo(HttpServletRequest request) {
+			return "community/query_detailinfo";
+		}
+		@RequestMapping(value = "patient", method = RequestMethod.GET)
+		public String patient(HttpServletRequest request) {
+			List<CommunityKechengDoctorPatient> CourseDoctorPatient_list = community_kecheng_doctor_patientService.query();
+			List<CommunityKechengPatientViewer> CoursePatientViewer_list = community_kecheng_patient_viewerService.query();
+			request.setAttribute("Bar_doctor", CourseDoctorPatient_list);
+			request.setAttribute("Bar_viewer", CoursePatientViewer_list);
+			return "community/patient";
+		}
+		@RequestMapping(value = "ajaxcity_data", method = RequestMethod.GET,produces="text/plain;charset=UTF-8")
+		@ResponseBody
+		public String hypt(HttpServletRequest request,@RequestParam("selectedProvince") String selectedProvince) throws Exception {
+			selectedProvince = java.net.URLDecoder.decode(selectedProvince, "UTF-8");  
+			List<CommunityDoc> list = community_doctorService.getdata_city(selectedProvince);
+			return JsonUtil.object2json(list);
+		}
+		
+		@RequestMapping(value = "ajaxhoscity_data", method = RequestMethod.GET,produces="text/plain;charset=UTF-8")
+		@ResponseBody
+		public String gethoscity_data(HttpServletRequest request,@RequestParam("selectedProvince") String selectedProvince) throws Exception {
+			selectedProvince = java.net.URLDecoder.decode(selectedProvince, "UTF-8");  
+			List<CommunityHospital> list = community_hospitalService.getdata_city(selectedProvince);
+			return JsonUtil.object2json(list);
+		}
+		
+		@SuppressWarnings("unchecked")
+		@RequestMapping(value = "datatable_query", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+		@ResponseBody
+		public String datatable_query(HttpServletRequest request, @RequestParam("search[value]") String search,
+				@RequestParam("draw") int draw, @RequestParam("start") int start) throws Exception {
+			String str = request.getParameter("search[value]");
+			if (str == "" || str.equals("")) {
+				str = "心内";
+			}
+			if (str.endsWith("'")) {
+				str = str.substring(0, str.length() - 1);
+			}
+			int len = community_detail_infoService.query_count(str);
+			List<CommunityDetailInfo> list = community_detail_infoService.datatable_query(start, str);
+			JSONObject json = new JSONObject();
+			List<List<String>> list1 = new ArrayList<List<String>>();
+			List<String> list2 = new ArrayList<String>();
+
+			for (CommunityDetailInfo i : list) {
+				list2.add(i.getCity_name());
+				list2.add(i.getDoctor_name());
+				list2.add(i.getHospital_name());
+				list2.add(i.getKeshi_name());
+				list1.add(list2);
+				list2 = new ArrayList<String>();
+			}
+			json.put("data", list1);
+			json.put("recordsTotal", len);
+			json.put("recordsFiltered", len);
+			json.put("draw", draw);
+			return json.toJSONString();
+		}
+
+}

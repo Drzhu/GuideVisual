@@ -1,0 +1,42 @@
+package com.guide.community.pojo;
+
+import java.io.Serializable;
+
+public class CommunityKechengDoctorPatient implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String course_name;
+
+    private String doctor_num;
+
+    private String patient_num;
+
+	public String getCourse_name() {
+		return course_name;
+	}
+
+	public void setCourse_name(String course_name) {
+		this.course_name = course_name;
+	}
+
+	public String getDoctor_num() {
+		return doctor_num;
+	}
+
+	public void setDoctor_num(String doctor_num) {
+		this.doctor_num = doctor_num;
+	}
+
+	public String getPatient_num() {
+		return patient_num;
+	}
+
+	public void setPatient_num(String patient_num) {
+		this.patient_num = patient_num;
+	}
+
+  
+}

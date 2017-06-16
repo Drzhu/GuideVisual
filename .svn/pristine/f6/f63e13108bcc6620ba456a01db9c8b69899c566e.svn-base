@@ -1,0 +1,67 @@
+/**
+ * 
+ */
+function map_hostipal_option(hos_prov_list) {
+	var option = {
+			tooltip : {
+				trigger : 'item'
+			},
+			legend : {
+				orient : 'vertical',
+				x : 'left',
+				data : [ '医院数量' ]
+			},
+			visualMap : {
+				min : 0,
+				max : 250,
+				x : 'left',
+				y : 'bottom',
+				color : [ 'orangered', 'yellow', 'lightskyblue' ],
+				text : [ '高', '低' ], // 文本，默认为数值文本
+				calculable : true
+			},
+			toolbox : {
+				show : true,
+				orient : 'vertical',
+				x : 'right',
+				y : 'center',
+				feature : {
+					mark : {
+						show : true
+					},
+					dataView : {
+						show : true,
+						readOnly : false
+					}
+				}
+			},
+			series : [ {
+				tooltip : {
+					trigger : 'item',
+				},
+				name : '医院数量',
+				type : 'map',
+				mapType : 'china',
+				left : '3%',
+				selectedMode : 'single',
+				label : {
+					normal : {
+						show : true,
+						textStyle : {
+							fontSize : 9,
+						}
+					},
+					emphasis : {
+						show : true,
+						textStyle : {
+							fontStyle : 'oblique',
+							fontSize : 9,
+						}
+					}
+				},
+				showLegendSymbol : false,
+				data:hos_prov_list,
+			}, ],
+		};
+		return option;
+}

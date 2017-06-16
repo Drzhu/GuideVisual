@@ -1,0 +1,92 @@
+<%@ page language="java" pageEncoding="UTF-8"%>
+<%--引入JSTL核心标签库 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<!DOCTYPE html>
+<html>
+<head>
+<%@ include file="../common/lpt1_common.jsp"%>
+<title>医生信息</title>
+</head>
+<body>
+	<div id="sidebar" class="col-sm-3 col-lg-2 sidebar">
+		<ul class="nav-list">
+			<li><a href="hospital"><i class="fa fa-dashboard"></i> 医院信息</a></li>
+			<li><a href="course"><i class="fa fa-th"></i> 课程信息</a></li>
+			<li><a href="patient"><i class="fa fa-info-circle"></i> 患者信息</a></li>
+			<li><a href="date"><i class="fa fa-calendar"></i>日期信息</a></li>
+			<li class="active"><a href="query_detailinfo"><i
+					class="fa fa-user-md"></i>医生查询 </a></li>
+		</ul>
+	</div>
+
+	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
+		<div class="row">
+			<ol class="breadcrumb">
+				<li><i class="fa fa-home"></i> 医生查询</li>
+			</ol>
+		</div>
+		<div class="row margin-top">
+			<div class="col-sm-12">
+				<div class="panel panel-info">
+					<div class="panel-heading">医生查询</div>
+					<div class="panel-body">
+						<table id="doc_info"
+							class="table table-bordered table-hover table-striped"
+							style="width: 100%;">
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="../js/jquery.dataTables.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$('#doc_info')
+					.DataTable(
+							{
+								'lengthChange' : false,
+								'bdestroy' : true,
+								'bRetrieve' : true,
+								'aoColumns' : [ {
+									title : "城市",
+									width : "22%"
+								}, {
+									title : "姓名",
+									width : "21%"
+								}, {
+									title : "医院",
+									width : "36%"
+								}, {
+									title : "科室",
+									width : "22%"
+								}, ],
+								"serverSide" : true,
+								"ajax" : "datatable_query",
+								'language' : {
+									'emptyTable' : '没有数据',
+									'loadingRecords' : '加载中...',
+									'processing' : '查询中...',
+									'search' : '<i class="fa fa-search" style="position:absolute; margin:30px 10px; color:#4f9cde;"></i>',
+									'lengthMenu' : '每页 _MENU_ 条',
+									'zeroRecords' : '没有数据',
+									'paginate' : {
+										'first' : '首页',
+										'last' : '末页',
+										'next' : '下页',
+										'previous' : '上页'
+									},
+									'info' : '第 _PAGE_ 页 / 总 _PAGES_ 页',
+									'infoEmpty' : '没有数据',
+									'infoFiltered' : '(过滤总数 _MAX_ 条)'
+								}
+							});
+
+			$("#doc_info_filter input[type=search]").addClass("form-control")
+					.attr("placeholder", "按城市、医院、姓名、科室搜索").css("padding-left",
+							"30px");
+		});
+	</script>
+</body>
+</html>

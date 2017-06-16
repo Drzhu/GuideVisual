@@ -1,0 +1,12 @@
+package com.guide.service;
+
+import java.util.List;
+
+import com.guide.pojo.DetailInfo;
+
+public interface DetailInfoService {
+
+	public List<DetailInfo> datatable_query(int start ,String keshi_name);
+	public int query_count(String str);
+	public List<DetailInfo> query_keshi(String keshi_name);
+}

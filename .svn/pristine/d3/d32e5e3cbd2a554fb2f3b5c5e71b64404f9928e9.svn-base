@@ -1,0 +1,10 @@
+package com.guide.service;
+
+import java.util.List;
+
+import com.guide.pojo.Projecter;
+
+public interface ProjecterService {
+
+	List<Projecter> query();
+}

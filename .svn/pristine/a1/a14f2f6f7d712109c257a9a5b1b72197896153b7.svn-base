@@ -1,0 +1,19 @@
+package com.backup;
+
+import java.util.List;
+
+public interface CommunityKechengDoctorPatientMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(CommunityKechengDoctorPatient record);
+
+    int insertSelective(CommunityKechengDoctorPatient record);
+
+    CommunityKechengDoctorPatient selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(CommunityKechengDoctorPatient record);
+
+    int updateByPrimaryKey(CommunityKechengDoctorPatient record);
+
+	List<CommunityKechengDoctorPatient> query();
+}

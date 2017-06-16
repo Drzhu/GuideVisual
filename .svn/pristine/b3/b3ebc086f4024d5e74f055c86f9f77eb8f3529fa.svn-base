@@ -1,0 +1,25 @@
+package com.guide.community.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.guide.community.mapper.CommunityDocMapper;
+import com.guide.community.pojo.CommunityDoc;
+@Service("community_doctorService")
+public class CommunityDocServiceImpl implements CommunityDocService {
+	@Autowired
+	private CommunityDocMapper doctorMapper;
+	
+	public List<CommunityDoc> community_query_prov() {
+		return doctorMapper.community_query_prov();
+	}
+	public List<CommunityDoc> query_city() {
+		return doctorMapper.query_city();
+	}
+	public List<CommunityDoc> getdata_city(String selectedProvince) {
+		// TODO Auto-generated method stub
+		return doctorMapper.getdata_city(selectedProvince);
+	}
+}

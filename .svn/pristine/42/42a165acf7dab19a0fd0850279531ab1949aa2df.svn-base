@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings>
+		<setting name="cacheEnabled" value="true" />
+	</settings>
+	<typeAliases>
+		<typeAlias type="com.guide.pojo.User" alias="user" />
+		<typeAlias type="com.guide.pojo.Doctor" alias="doctor" />
+		<typeAlias type="com.guide.pojo.Keshi" alias="keshi" />
+		<typeAlias type="com.guide.pojo.Course" alias="course" />
+		<typeAlias type="com.guide.pojo.Hospital" alias="hospital" />
+		<typeAlias type="com.guide.pojo.DateCourseReg" alias="date_course_reg" />
+		<typeAlias type="com.guide.pojo.CourseDoctorPatient" alias="course_doctor_patient" />
+		<typeAlias type="com.guide.pojo.CoursePatientViewer" alias="course_patient_viewer" />
+		<typeAlias type="com.guide.pojo.DetailInfo" alias="detail_info" />
+		<typeAlias type="com.guide.community.pojo.CommunityKeshi" alias="CommunityKeshi" />
+		<typeAlias type="com.guide.community.pojo.CommunityDateCourseReg" alias="CommunityDateCourseReg" />
+		<typeAlias type="com.guide.community.pojo.CommunityDetailInfo" alias="CommunityDetailInfo" />
+		<typeAlias type="com.guide.community.pojo.CommunityHospital" alias="CommunityHospital" />
+		<typeAlias type="com.guide.community.pojo.CommunityKecheng" alias="CommunityKecheng" />
+		<typeAlias type="com.guide.community.pojo.CommunityKechengDoctorPatient" alias="CommunityKechengDoctorPatient" />
+		<typeAlias type="com.guide.community.pojo.CommunityKechengPatientViewer" alias="CommunityKechengPatientViewer" />
+		<typeAlias type="com.guide.community.pojo.CommunityDoc" alias="CommunityDoc" />
+	</typeAliases>
+	<mappers>
+		<mapper resource="com/guide/mapper/UserMapper.xml" />
+		<mapper resource="com/guide/mapper/DoctorMapper.xml" />
+		<mapper resource="com/guide/mapper/HospitalMapper.xml" />
+		<mapper resource="com/guide/mapper/KeshiMapper.xml" />
+		<mapper resource="com/guide/mapper/CourseMapper.xml" />
+		<mapper resource="com/guide/mapper/DateCourseRegMapper.xml" />
+		<mapper resource="com/guide/mapper/CourseDoctorPatientMapper.xml" />
+		<mapper resource="com/guide/mapper/CoursePatientViewerMapper.xml" />
+		<mapper resource="com/guide/mapper/DetailInfoMapper.xml" />
+		<mapper resource="com/guide/community/mapper/CommunityKeshiMapper.xml" />
+		<mapper resource="com/guide/community/mapper/CommunityDocMapper.xml" />
+		<mapper resource="com/guide/community/mapper/CommunityKechengPatientViewerMapper.xml" />
+		<mapper resource="com/guide/community/mapper/CommunityKechengDoctorPatientMapper.xml" />
+		<mapper resource="com/guide/community/mapper/CommunityKechengMapper.xml" />
+		<mapper resource="com/guide/community/mapper/CommunityHospitalMapper.xml" />
+		<mapper resource="com/guide/community/mapper/CommunityDetailInfoMapper.xml" />
+		<mapper resource="com/guide/community/mapper/CommunityDateCourseRegMapper.xml" />
+	</mappers>
+</configuration>

@@ -1,0 +1,78 @@
+/**
+ * 
+ */
+function pie_keshi(data_legend,data_series) {
+	var pie_keshi_option = {
+		tooltip : {
+			trigger : 'item',
+			formatter : "{a} <br/>{b} : {c} ({d}%)"
+		},
+		legend : {
+/*			orient :'vertical',*/
+			/*left : 'left',*/
+			bottom:0,
+			align :'left',
+			itemGap :5,
+			show:true,
+			formatter:function (name) {
+				return name;
+			},
+			data : data_legend
+		},
+		series : [ {
+			name : '科室占比',
+			type : 'pie',
+			radius : '80%',
+			center : [ '50%', '50%' ],
+			data : data_series,
+			itemStyle : {
+				emphasis : {
+					shadowBlur : 10,
+					shadowOffsetX : 0,
+					shadowColor : 'rgba(0, 0, 0, 0.5)'
+				}
+			}
+		} ]
+	};
+	return pie_keshi_option;
+}
+
+function pie_course(data_legend,data_series){
+	var pie_course_option = {
+			tooltip : {
+				trigger : 'item',
+				formatter : "{b}<br/> {c} ({d}%)",
+				position: function (point, params, dom) {
+				      return ["30%", point[1]];
+				  }
+			},
+			legend : {
+				/*orient :'vertical',*/
+				/*left : 'left',*/
+				bottom:5,
+				padding :2,
+				itemGap :5,
+				show:true,
+				data : data_legend,
+				tooltip: {
+			        show: true
+			    },
+			    borderColor : '#87C6F1'
+			},
+			series : [ {
+				name : '课程占比',
+				type : 'pie',
+				radius : '75%',
+				center : [ '50%', '45%' ],
+				data : data_series,
+				itemStyle : {
+					emphasis : {
+						shadowBlur : 10,
+						shadowOffsetX : 0,
+						shadowColor : 'rgba(0, 0, 0, 0.5)'
+					}
+				}
+			} ]
+		};
+		return pie_course_option;
+	}

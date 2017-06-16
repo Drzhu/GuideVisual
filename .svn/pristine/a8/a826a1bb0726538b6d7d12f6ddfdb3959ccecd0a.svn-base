@@ -1,0 +1,10 @@
+package com.guide.community.service;
+
+import java.util.List;
+
+import com.guide.community.pojo.CommunityKechengDoctorPatient;
+
+
+public interface CommunityKechengDoctorPatientService {
+	List<CommunityKechengDoctorPatient> query();
+}

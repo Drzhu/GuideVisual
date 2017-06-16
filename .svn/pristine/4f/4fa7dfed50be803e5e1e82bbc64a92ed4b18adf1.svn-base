@@ -1,0 +1,19 @@
+package com.guide.community.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.guide.community.mapper.CommunityKechengDoctorPatientMapper;
+import com.guide.community.pojo.CommunityKechengDoctorPatient;
+
+@Service("community_kecheng_doctor_patientService")
+public class CommunityKechengDoctorPatientServiceImpl implements CommunityKechengDoctorPatientService {
+	@Autowired
+	private CommunityKechengDoctorPatientMapper CourseDoctorPatientMapper;
+
+	public List<CommunityKechengDoctorPatient> query() {
+		return CourseDoctorPatientMapper.query();
+	}
+}

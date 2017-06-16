@@ -1,0 +1,9 @@
+package com.guide.community.service;
+
+import java.util.List;
+
+import com.guide.community.pojo.CommunityKecheng;
+
+public interface CommunityKechengService {
+	List<CommunityKecheng> query();
+}

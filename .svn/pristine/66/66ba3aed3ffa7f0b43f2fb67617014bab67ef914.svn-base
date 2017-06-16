@@ -1,0 +1,11 @@
+package com.guide.mapper;
+
+import java.util.List;
+
+import com.guide.pojo.Hospital;
+
+public interface HospitalMapper {
+	List<Hospital> query_prov();
+	List<Hospital> query_city();
+	List<Hospital> getdata_city(String selectedProvince);
+}

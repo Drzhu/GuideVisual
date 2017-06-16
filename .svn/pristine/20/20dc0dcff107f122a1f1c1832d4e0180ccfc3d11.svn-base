@@ -1,0 +1,13 @@
+package com.guide.service;
+
+import java.util.List;
+
+
+import com.guide.pojo.Doctor;
+
+public interface DoctorService {
+
+	List<Doctor> query_prov();
+	List<Doctor> query_city();
+	List<Doctor> getdata_city(String selectedProvince);
+}

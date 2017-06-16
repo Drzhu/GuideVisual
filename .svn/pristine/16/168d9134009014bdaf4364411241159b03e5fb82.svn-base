@@ -1,0 +1,37 @@
+package com.guide.community.pojo;
+
+import java.io.Serializable;
+
+public class CommunityDateCourseReg implements Serializable {
+    private String date;
+
+    private String course_num;
+
+    private String doctor_reg_num;
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public String getCourse_num() {
+		return course_num;
+	}
+
+	public void setCourse_num(String course_num) {
+		this.course_num = course_num;
+	}
+
+	public String getDoctor_reg_num() {
+		return doctor_reg_num;
+	}
+
+	public void setDoctor_reg_num(String doctor_reg_num) {
+		this.doctor_reg_num = doctor_reg_num;
+	}
+
+
+}

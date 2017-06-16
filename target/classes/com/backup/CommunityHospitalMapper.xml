@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.guide.community.mapper.CommunityHospitalMapper" >
+ <cache type="org.mybatis.caches.ehcache.LoggingEhcache">
+		<property name="timeToIdleSeconds" value="3600" /><!--1 hour -->
+		<property name="timeToLiveSeconds" value="3600" /><!--1 hour -->
+		<property name="maxEntriesLocalHeap" value="1000" />
+		<property name="maxEntriesLocalDisk" value="10000000" />
+		<property name="memoryStoreEvictionPolicy" value="LRU" />
+	</cache>
+  	<select id="query_prov" resultType="CommunityHospital">
+		select distinct
+		prov_name,prov_num from community_hospital order by prov_num*1 desc;
+	</select>
+	<!-- 查询全国医院省内各市分布 -->
+	<select id="query_city" resultType="CommunityHospital">
+		select city_name,city_num
+		from community_hospital order by city_num*1 desc;
+	</select>
+	<!-- 查询全国医生指定省内各市 -->
+	<select id="getdata_city" resultType="CommunityHospital" parameterType="java.lang.String">
+	  <![CDATA[
+		select city_name,city_num
+		from community_hospital where prov_name = #{selectedProvince} order by city_num*1 desc
+		]]>
+	</select>
+  
+</mapper>

@@ -1,0 +1,175 @@
+<%@ page language="java" pageEncoding="UTF-8"%>
+<%--引入JSTL核心标签库 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="renderer" content="webkit">
+<link rel="stylesheet" type="text/css" href="font-awesome-4.6.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="css/manage_css/css.css" />
+<link rel="stylesheet" type="text/css" href="css/supersized.css" />
+<title>用户登录</title>
+</head>
+<body id="login_bg">
+	<div class="login-box">
+		<div class="login-logo">数据可视化</div>
+		<div class="login-box-body">
+			<p>用户登录</p>
+			<div class="form-group">
+				<i class="fa fa-user onlyicon"></i> 
+				<input id="username" type="text" name="username" placeholder="用户名" class="form-control" />
+				<div class="red username-tips">请输入用户名</div>
+			</div>
+			<div class="form-group">
+				<i class="fa fa-lock onlyicon"></i> 
+				<input id="password" type="password" name="password" placeholder="密码"	class="form-control" />
+				<div class="red password-tips">请输入密码</div>
+			</div>
+			<div class="checkbox">
+				<label> <input id="remberInput" type="checkbox"
+					name="remberInput" />记住我
+				</label>
+			</div>
+			<button id="loginBtn" type="submit"
+				class="btn btn-block btn-primary btn-login">登录</button>
+			<div class="login-help">
+				<a href="forgetpassword.html" class="pull-left">忘记密码？</a> <a
+					href="regist.html" class="pull-right">注册新用户</a>
+			</div>
+		</div>
+	</div>
+
+	<script src="js/loginbg/jquery-2.2.4.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/bootstrapValidator.min.js"></script>
+	<script src="js/jquery.cookie.js"></script>
+	<script src="js/loginbg/supersized.3.2.7.min.js"></script>
+	<script src="js/loginbg/supersized-init.js"></script>
+	<script>
+		$(function() {
+			$('#loginBtn').on('click',function() {
+								var reqData = {
+									mobile : $('#username').val(),
+									password : $('#password').val(),
+								};
+								console.log(reqData);
+								// -- 手机号验证
+								if (reqData.mobile == "") {
+									$(".username-tips").show();
+									return false;
+								}
+								if (reqData.password == "") {
+									$(".password-tips").show();
+									return false;
+								}
+								var mobile =reqData.mobile;
+								var password = reqData.password;
+								$.ajax({
+											type : "POST",
+											url : "Validate_b",
+											data : {
+												username : mobile,
+												password : password
+											},
+											success : function(res) {
+												var obj = eval('(' + res + ')');
+												for ( var i in obj) {
+													if (i == "success") {
+														window.location.href = "hospital";
+													}
+													if (i == "error_0") {
+														alert(obj[i]);
+													}
+													if (i == "error_1") {
+														alert(obj[i]);
+													}
+												}
+											},
+											contentType : "application/x-www-form-urlencoded;charset=UTF-8"
+										});
+							});
+			/* $("#loginForm").bootstrapValidator({
+				message: 'This value is not valid',
+			    feedbackIcons: {
+			        valid: 'fa fa-ok',
+			        invalid: 'fa fa-remove',
+			        validating: 'fa fa-refresh'
+			    },
+			    fields: {
+			    	username: {
+			            message: '无效的用户名',
+			            validators: {
+			                notEmpty: {
+			                	message: '用户名不能为空'
+			                },
+			                regexp: {
+			                    regexp: /^[a-zA-Z0-9_\.]+$/
+			                },
+			                remote: {
+			                    url: '',
+			                    message: '获取不到用户名'
+			                },
+			                different: {
+			                    field: 'password',
+			                    message: '用户名和密码不能一致'
+			                }
+			            }
+			        },
+			        password: {
+			            validators: {
+			                notEmpty: {
+			                    message: '密码不能为空'
+			                }
+			            }
+			        },
+			    },
+			});
+			 */
+			//初始化页面时验证是否记住了密码 
+			if ($.cookie("remberInput") == "true") {
+				alert('cookie');
+				$("#remberInput").attr("checked", true);
+				$("#username").val($.cookie("userName"));
+				$("#password").val($.cookie("passWord"));
+			}
+			//保存用户信息 
+			function saveUserInfo() {
+				alert($("#remberInput").attr("checked"));
+				if ($("#remberInput").attr("checked") == true) {
+					var userName = $("#username").val();
+					var passWord = $("#password").val();
+					$.cookie("remberInput", "true", {
+						expires : 7
+					}); // 存储一个带7天期限的 cookie 
+					$.cookie("userName", userName, {
+						expires : 7
+					}); // 存储一个带7天期限的 cookie 
+					$.cookie("passWord", passWord, {
+						expires : 7
+					}); // 存储一个带7天期限的 cookie 
+				} else {
+					$.cookie("remberInput", "false", {
+						expires : -1
+					});
+					$.cookie("userName", '', {
+						expires : -1
+					});
+					$.cookie("passWord", '', {
+						expires : -1
+					});
+				}
+			}
+
+		});
+	</script>
+</body>
+</html>
+
+

@@ -1,0 +1,46 @@
+package com.guide.pojo;
+
+public class Hospital {
+	private String prov_name;
+	private String city_name;
+	private String prov_num;
+	private String city_num;
+
+	public String getProv_name() {
+		return prov_name;
+	}
+
+	public void setProv_name(String prov_name) {
+		this.prov_name = prov_name;
+	}
+
+	public String getCity_name() {
+		return city_name;
+	}
+
+	public void setCity_name(String city_name) {
+		this.city_name = city_name;
+	}
+
+	public String getProv_num() {
+		return prov_num;
+	}
+
+	public void setProv_num(String prov_num) {
+		this.prov_num = prov_num;
+	}
+
+	public String getCity_num() {
+		return city_num;
+	}
+
+	public void setCity_num(String city_num) {
+		this.city_num = city_num;
+	}
+
+	@Override
+	public String toString() {
+		return "[prov_name=" + prov_name + ", city_name=" + city_name + ", prov_num=" + prov_num + ", city_num="
+				+ city_num + "]";
+	}
+}

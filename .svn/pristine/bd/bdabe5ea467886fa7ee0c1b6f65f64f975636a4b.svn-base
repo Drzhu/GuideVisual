@@ -1,0 +1,23 @@
+package com.guide.pojo;
+
+public class Projecter {
+	private String name; //录制课程所属科室
+	private String pro_num;//录制课程医生数目
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getPro_num() {
+		return pro_num;
+	}
+	public void setPro_num(String pro_num) {
+		this.pro_num = pro_num;
+	}
+	@Override
+	public String toString() {
+		return "Projecter [name=" + name + ", pro_num=" + pro_num + "]";
+	}
+	
+}

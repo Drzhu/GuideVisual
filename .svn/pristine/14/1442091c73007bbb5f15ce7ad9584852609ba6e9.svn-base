@@ -1,0 +1,62 @@
+package com.guide.community.pojo;
+
+import java.io.Serializable;
+
+public class CommunityDetailInfo implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String prov_name;
+
+    private String city_name;
+
+    private String doctor_name;
+
+    private String hospital_name;
+
+    private String keshi_name;
+
+	public String getProv_name() {
+		return prov_name;
+	}
+
+	public void setProv_name(String prov_name) {
+		this.prov_name = prov_name;
+	}
+
+	public String getCity_name() {
+		return city_name;
+	}
+
+	public void setCity_name(String city_name) {
+		this.city_name = city_name;
+	}
+
+	public String getDoctor_name() {
+		return doctor_name;
+	}
+
+	public void setDoctor_name(String doctor_name) {
+		this.doctor_name = doctor_name;
+	}
+
+	public String getHospital_name() {
+		return hospital_name;
+	}
+
+	public void setHospital_name(String hospital_name) {
+		this.hospital_name = hospital_name;
+	}
+
+	public String getKeshi_name() {
+		return keshi_name;
+	}
+
+	public void setKeshi_name(String keshi_name) {
+		this.keshi_name = keshi_name;
+	}
+
+   
+}

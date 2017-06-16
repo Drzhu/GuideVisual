@@ -1,0 +1,19 @@
+package com.backup;
+
+import java.util.List;
+
+public interface CommunityKechengMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(CommunityKecheng record);
+
+    int insertSelective(CommunityKecheng record);
+
+    CommunityKecheng selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(CommunityKecheng record);
+
+    int updateByPrimaryKey(CommunityKecheng record);
+
+	List<CommunityKecheng> query();
+}

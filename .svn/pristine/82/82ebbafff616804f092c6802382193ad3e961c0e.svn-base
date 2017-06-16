@@ -1,0 +1,11 @@
+package com.guide.mapper;
+
+import java.util.List;
+
+import com.guide.pojo.CourseDoctorPatient;
+
+public interface CourseDoctorPatientMapper {
+
+	List<CourseDoctorPatient> query();
+
+}

@@ -1,0 +1,23 @@
+package com.guide.pojo;
+
+public class Course {
+	private String kecheng_name;
+	private String kecheng_num;
+	public String getKecheng_name() {
+		return kecheng_name;
+	}
+	public void setKecheng_name(String kecheng_name) {
+		this.kecheng_name = kecheng_name;
+	}
+	public String getKecheng_num() {
+		return kecheng_num;
+	}
+	public void setKecheng_num(String kecheng_num) {
+		this.kecheng_num = kecheng_num;
+	}
+	@Override
+	public String toString() {
+		return "[kecheng_name=" + kecheng_name + ", kecheng_num=" + kecheng_num + "]";
+	}
+
+}

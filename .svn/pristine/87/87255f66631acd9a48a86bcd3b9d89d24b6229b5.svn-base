@@ -1,0 +1,9 @@
+package com.backup;
+
+import java.util.List;
+
+public interface CourseDoctorPatientMapper {
+
+	List<CourseDoctorPatient> query();
+
+}

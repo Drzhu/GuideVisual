@@ -1,0 +1,21 @@
+package com.guide.community.mapper;
+
+import java.util.List;
+
+import com.guide.community.pojo.CommunityDateCourseReg;
+
+public interface CommunityDateCourseRegMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(CommunityDateCourseReg record);
+
+    int insertSelective(CommunityDateCourseReg record);
+
+    CommunityDateCourseReg selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(CommunityDateCourseReg record);
+
+    int updateByPrimaryKey(CommunityDateCourseReg record);
+
+	List<CommunityDateCourseReg> query();
+}

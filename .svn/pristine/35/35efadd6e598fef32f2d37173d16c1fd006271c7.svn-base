@@ -1,0 +1,344 @@
+<%@ page language="java" pageEncoding="UTF-8"%>
+<%--引入JSTL核心标签库 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!doctype html>
+<html lang="">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>中交数据中心</title>
+
+<link rel="stylesheet" href="styles/main.css">
+
+</head>
+<body>
+
+<header>
+<input hidden="true" id="vehicle_input" type="text">
+	<section class="top-tab-bar">
+		<ul id="tabNav">
+			<li>最近7天</li>
+			<li>最近5周</li>
+			<!-- <li>最近半年</li> -->
+		</ul>
+	</section>
+	
+</header>
+
+<article class="container">
+<div id ="vims_seven" hidden="true">
+    <c:forEach var="vims" items="${vc_seven}">
+   <fmt:formatDate value="${vims.date_day}" type="date" pattern='MM-dd'/>@
+    </c:forEach>
+    </div>
+    <div id ="vims_seven_count" hidden="true">
+    <c:forEach var="vims" items="${vc_seven}">
+    ${vims.day_vehicle_num}@
+    </c:forEach>
+    </div>
+    <!-- 下面是最近五周 -->
+     <div id ="vims_five_date" hidden="true">
+    <c:forEach var="vims" items="${vc_five}">
+    ${vims.week_of_year}@
+    </c:forEach>
+    </div>
+     <div id ="vims_five_count" hidden="true">
+    <c:forEach var="vims" items="${vc_five}">
+    ${vims.day_vehicle_num}@
+    </c:forEach>
+    </div>
+    <!-- 最近五周数据结束 -->
+    
+	<div id="tabCon" class="tab-con-box">
+		<div class="tab-con">
+			<div class="chart-box">
+			<div id="veh_severn" class="echart"></div>
+			</div>
+		</div>
+
+		<div class="tab-con">
+			<div class="chart-box">
+				<div id = "veh_five" class="echart"></div>
+			</div>
+		</div>
+		<!-- <div class="tab-con">
+			<div class="chart-box">
+				<div id = "veh_half" class="echart"></div>
+			</div>
+		</div> -->
+	</div>
+</article>
+
+<script src="scripts/zepto.min.js"></script>
+<script src="echarts/dist/echarts.js"></script>
+<script src="scripts/main.js"></script>
+
+<script>
+	$(function(){
+		new PubTab({
+			tabTag: document.querySelector('#tabNav'),
+			tabCon: document.querySelector('#tabCon')
+		});
+		sW = $(window).width();
+		$('.echart').css({
+			width: sW
+		})
+	});
+</script>
+ <script type="text/javascript">
+ var vims_list=[];
+ var vims_seven_count_list=[];
+ var vims_five_date_list=[];
+ var vims_five_count_list=[];
+ 
+ var vims = $("#vims_seven").text().trim().split("@");
+ var vims_seven_count = $("#vims_seven_count").text().trim().split("@");
+ var vims_five_date = $("#vims_five_date").text().trim().split("@");
+ var vims_five_count = $("#vims_five_count").text().trim().split("@");
+ 
+ for (var i = vims.length-1; i >0 ; i--) {
+	 vims_list.push(vims[i-1].trim());
+	 vims_seven_count_list.push(parseInt(vims_seven_count[i-1].trim()));
+ }
+ for (var i = 0; i < vims_five_date.length-1; i++) {
+	 vims_five_date_list.push(vims_five_date[i].trim());
+	 vims_five_count_list.push(parseInt(vims_five_count[i].trim()));
+ }
+ console.log(vims_list);
+ function getdata_range(week){
+	  if(typeof(week)=="string"){
+			var ss=  $.ajax({
+		 type:"get",
+		 url:"getdata_range_custom",
+		 data:{week:week},
+		 success:function(data){
+			 console.log("返回的日期区间是"+data);
+			 var da = '['+data.substr(6, 7);
+			 $("#vehicle_input").val(da);
+			 return data;
+		 },
+	  });
+	  }
+	return ss;
+ }
+ function toThousands(num) {
+	    return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
+	}
+        // 路径配置
+        require.config({
+            paths: {
+                echarts: 'echarts/dist'
+            }
+        });
+        
+        // 使用
+        require(
+            [
+                'echarts',
+                'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+                'echarts/chart/line'
+            ],
+            function (ec) {
+                // 基于准备好的dom，初始化echarts图表
+                var veh_severn = ec.init(document.getElementById('veh_severn'));
+                var veh_five = ec.init(document.getElementById('veh_five'));
+                /* var veh_half = ec.init(document.getElementById('veh_half')); */
+                //车辆中心7天
+                var op_veh_severn = {
+                		 title : {
+                  			  subtext:"（单位：万）",
+                  			  subtextStyle:{
+                  				  fontSize:9,
+                  				  align:"center",
+                  			  }
+                  		    },
+                	    tooltip : {
+                	        trigger: 'axis'
+                	    },
+                	    legend: {
+                	        data:['车辆总数'],
+                	        textStyle:{
+                	        	fontSize:14,
+                	        	fontWeight:'bold'
+                	        },
+                	        x:'left'
+                	    },
+                	    grid:{
+                 	    	x:40,
+                 	    	y:60,
+                 	    	x2:30,
+                 	    	y2:40
+                 	    },
+                	    xAxis : [
+                	        {
+                	            type : 'category',
+                	            boundaryGap : false,
+                	            axisLine:false,
+                	            axisTick:false,
+                	            data :vims_list
+                	        }
+                	    ],
+                	    yAxis : [
+                	        {
+                	            type : 'value',
+                	            axisLine:false,
+                	            scale: true, 
+                	            axisLabel : {
+                	            	formatter: function (value){
+                	                	var n = value/10000;
+                	                	return n}
+                	            }
+                	        }
+                	    ],
+                	    series : [
+                	        {
+                	            name:'车辆总数',
+                	            type:'line',
+                	            symbol:'emptyCircle',
+                	            data:vims_seven_count_list,
+                 	            itemStyle:{
+                 	                  normal:{color:'#37B7AD'}
+                 	              }
+                	        },
+                	    ]
+                	};
+
+                //车辆中心最近五周
+                var op_veh_five = {
+                		 title : {
+                 			  subtext:"（单位：万）",
+                 			  subtextStyle:{
+                 				  fontSize:9,
+                 				  align:"center",
+                 			  }
+                 		    },
+                		 tooltip : {
+                 	        trigger: 'axis',
+                 	       formatter:function(params,ticket,callback){
+                	    		var data_week = params[0][1];
+                	    		getdata_range(data_week);
+                	    	    setTimeout(function (){
+                	                // 仅为了模拟异步回调
+                	                callback(ticket, '第'+data_week+'周 ' +$("#vehicle_input").val()+'<br/>'+params[0][0]+':'+toThousands(params[0].data));
+                	            }, 200)
+                	    		return "Loading";
+                	    	}
+                 	    },
+                 	    legend: {
+                 	        data:['车辆总数'],
+                 	        textStyle:{
+                 	        	fontSize:14,
+                 	        	fontWeight:'bold'
+                 	        },
+                 	        x:'left'
+                 	    },
+                 	   grid:{
+                	    	x:40,
+                	    	y:60,
+                	    	x2:30,
+                	    	y2:40
+                	    },
+                 	    xAxis : [
+                 	        {
+                 	            type : 'category',
+                 	            boundaryGap : false,
+                 	            axisLine:false,
+                 	            axisTick:false,
+                 	           axisLabel : {
+                  	                formatter: function (value){
+                  	                	var n = value;
+                  	                	return '第'+n+'周'}
+                  	            },
+                 	            data :vims_five_date_list
+                 	        }
+                 	    ],
+                 	    yAxis : [
+                 	        {
+                 	            type : 'value',
+                 	            axisLine:false,
+                 	            scale: true, 
+                 	            axisLabel : {
+                 	            	formatter: function (value){
+                 	                	var n = value/10000;
+                 	                	return n}
+                 	            }
+                 	        }
+                 	    ],
+                 	    series : [
+                 	        {
+                 	            name:'车辆总数',
+                 	            type:'line',
+                 	            symbol:'emptyCircle',
+                 	            data:vims_five_count_list,
+                  	            itemStyle:{
+                  	                  normal:{color:'#37B7AD'}
+                  	              }
+                 	        },
+                 	    ]
+                 	};
+                //车辆中心最近半年
+                var op_veh_half = {
+                		 tooltip : {
+                 	        trigger: 'axis'
+                 	    },
+                 	    legend: {
+                 	        data:['车辆总数'],
+                 	        textStyle:{
+                 	        	fontSize:14,
+                 	        	fontWeight:'bold'
+                 	        },
+                 	        x:'left'
+                 	    },
+                 	    grid:{
+                 	    	x:50,
+                 	    	y:30,
+                 	    	x2:20,
+                 	    	y2:30
+                 	    },
+                 	    xAxis : [
+                 	        {
+                 	            type : 'category',
+                 	            boundaryGap : false,
+                 	            axisLine:false,
+                 	            axisTick:false,
+                 	            data :vims_list
+                 	        }
+                 	    ],
+                 	    yAxis : [
+                 	        {
+                 	            type : 'value',
+                 	            axisLine:false,
+                 	            scale: true, 
+                 	            axisLabel : {
+                 	            	formatter: function (value){
+                 	                	var n = value/10000;
+                 	                	return n+"W"}
+                 	            }
+                 	        }
+                 	    ],
+                 	    series : [
+                 	        {
+                 	            name:'车辆总数',
+                 	            type:'line',
+                 	            symbol:'emptyCircle',
+                 	            data:vims_seven_count_list,
+                  	            itemStyle:{
+                  	                  normal:{color:'#37B7AD'}
+                  	              }
+                 	        },
+                 	    ]
+                 	};
+        
+                // 为echarts对象加载数据 
+                veh_severn.setOption(op_veh_severn);
+                veh_five.setOption(op_veh_five);
+                /* veh_half.setOption(op_veh_half); */
+            }
+        );
+    </script>
+	
+
+</body>
+</html>

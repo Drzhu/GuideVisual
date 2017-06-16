@@ -1,0 +1,10 @@
+package com.backup;
+
+import java.util.List;
+
+public interface CommunityDocService {
+
+	List<CommunityDoc> community_query_prov();
+	List<CommunityDoc> query_city();
+	List<CommunityDoc> getdata_city(String selectedProvince);
+}

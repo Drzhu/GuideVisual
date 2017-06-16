@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.guide.mapper.KeshiMapper">
+	<!-- 查询全国医院各省分布 -->
+	<select id="query" resultType="keshi">
+		select keshi_name,keshi_num from keshi order by keshi_num*1 desc;
+	</select>
+</mapper>

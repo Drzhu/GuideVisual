@@ -1,0 +1,4 @@
+jdbc_driverClassName=com.mysql.jdbc.Driver
+jdbc_url=jdbc:mysql://172.16.14.40:3306/data_show?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
+jdbc_username=devgroup
+jdbc_password=devgroup

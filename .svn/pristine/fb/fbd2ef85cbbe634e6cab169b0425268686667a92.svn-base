@@ -1,0 +1,426 @@
+<%@ page language="java" pageEncoding="UTF-8"%>
+<%--引入JSTL核心标签库 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ include file="../common/mobile_common.jsp" %>
+	<head>
+	<title>社区医生可视化数据</title>
+	</head>
+	<body>
+	<nav class="navbar navbar-inverse custom-navbar" style="margin:0 -10px;">
+			<div class="container">
+				<div class="navbar-header">
+					<a href="" class="navbar-brand">
+						<img class="pull-left" src="img/guidelogo.png" width = '38' alt="盖德"> 数据可视化
+					</a>
+					<a href="mobile_community_info" class="btn btn-xs btn-success pull-right" style="margin:8px 15px 0px; font-size:14px;"><i class="fa fa-user-md"></i>&nbsp;医生信息</a>
+				</div>
+			</div>
+		</nav>
+		<!--轮播图start-->
+		<div id="carousel-generic" class="carousel slide carousel-custom" data-ride="carousel">
+		  <div class="carousel-inner" role="listbox">
+		    <div class="item active">
+		      <img src="img/list2.jpg" alt="...">
+		      <div class="carousel-caption carousel-info1">
+	        		<h4>数据可视化</h4>
+	        		<p>盖德医学</p>
+		      </div>
+		    </div>
+		    <div class="item">
+		      <img src="img/list1.jpg" alt="...">
+		      <div class="carousel-caption carousel-info2">
+		      		<h4>科技是未来</h4>
+	        		<p>盖德医学</p>
+		      </div>
+		    </div>
+		    <div class="item">
+		      <img src="img/list3.jpg" alt="...">
+		      <div class="carousel-caption carousel-info3">
+		      		<h4>大数据时代</h4>
+	        		<p>盖德医学</p>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<!--轮播图end-->	
+		<div class="container no-padding">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-primary">
+						<div class="panel-heading">医院信息</div>
+						<div class="panel-body no-padding">
+							<div class="nav-tabs-custom nav-tabs-header">
+								<!-- Nav tabs -->
+								<ul class="nav nav-tabs pull-right" role="tablist">
+								  <li role="presentation" class="active"><a href="#doctor-op" role="tab" data-toggle="tab">医生</a></li>
+								  <li role="presentation"><a href="#hospital-op" role="tab" data-toggle="tab">医院</a></li>
+								  <li role="presentation"><a href="#department" role="tab" data-toggle="tab">科室</a></li>
+								</ul>
+								<!-- Tab panes -->
+								<div class="tab-content no-padding">
+								  <div role="tabpanel" class="tab-pane fade in active"  id="doctor-op">
+								  	<div id="map_doctor" class="col-sm-9 no-padding chartbox1"></div>
+								  	<div class="col-sm-3 no-padding">
+										<h4><span id="city-name">全国</span>医生数量</h4>
+										<div id="doc-pro" class="table-responsive whole-country">
+											<!--全国表格start-->
+											<table class="table table-bordered table-hover table-striped">
+												<tr>
+													<th>城市</th>
+													<th>数量</th>
+												</tr>
+												<c:forEach var="item" items="${Doc_prov}" varStatus="status">
+												<tr>
+												<td>${item.name}</td>
+												<td>${item.value}</td>
+												</tr>
+												</c:forEach>
+											</table>	
+										</div>	
+										<div id="doc-city" class="table-responsive pro-city" style="display: none;">
+											<button id = 'back-china' class="btn btn-sm btn-success pull-right back-btn" style="margin: 5px;">返回全国</button>
+											<!--城市表格start-->
+											<table class="table table-bordered table-hover table-striped" id = "doc_city_table" >
+												<tr>
+													<th>城市</th>
+													<th>数量</th>
+												</tr>
+											</table>
+										</div>	
+									</div>
+								  </div>
+								  <div role="tabpanel" class="tab-pane fade" id="hospital-op">
+								  <div id="map_hostipal" class="col-sm-9 no-padding chartbox1"></div>
+								  	<div class="col-sm-3 no-padding">
+										<h4><span id="city-name2">全国</span>医院数量</h4>
+										<div id="hos-pro" class="table-responsive whole-country">
+											<!--全国表格start-->
+											<table class="table table-bordered table-hover table-striped">
+												<tr>
+													<th>城市</th>
+													<th>数量</th>
+												</tr>
+												<c:forEach var="item" items="${Hos_prov}" varStatus="status">
+												<tr>
+												<td>${item.name}</td>
+												<td>${item.value}</td>
+												</tr>
+												</c:forEach>
+											</table>	
+										</div>	
+										<div id="hos-city" class="table-responsive pro-city" style="display: none;">
+											<button id = 'back-china2' class="btn btn-sm btn-success pull-right back-btn" style="margin: 5px;">返回全国</button>
+											<!--城市表格start-->
+											<table class="table table-bordered table-hover table-striped" id="hos_city_table" >
+												<tr>
+													<th>城市</th>
+													<th>数量</th>
+												</tr>
+											</table>
+										</div>	
+									</div>
+								  </div>
+								  <div role="tabpanel" class="tab-pane fade" id="department">
+								  <div id="keshi_pie" class="col-sm-9 no-padding chartbox1"></div>
+								  	<div class="col-sm-3 no-padding keshi-tab">
+										<h4>科室数量</h4>
+										<div class="table-responsive whole-country">
+											<!--全国表格start-->
+											<table class="table table-bordered table-hover table-striped">
+												<tr>
+													<th>科室</th>
+													<th>数量</th>
+												</tr>
+												<c:forEach var="item" items="${Pie_keshi}" varStatus="status">
+												<tr>
+												<td>${item.keshi_name}</td>
+												<td>${item.keshi_num}</td>
+												</tr>
+												</c:forEach>
+											</table>	
+										</div>	
+									</div></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-primary">
+						<div class="panel-heading">课程统计</div>
+						<div class="panel-body">
+							<div id="course_cal" class="chartbox"></div>
+						</div>
+					</div>
+				</div>
+			</div>	
+			<div class="row">	
+				<div class="col-md-12">
+					<div class="panel panel-primary">
+						<div class="panel-heading">日期信息</div>
+						<div class="panel-body">
+							<div id="date_line" class="chartbox2"></div>
+						</div>
+					</div>
+				</div>
+			</div>	
+			
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-primary">
+						<div class="panel-heading">患者信息</div>
+						<div class="panel-body no-padding">
+							<div class="nav-tabs-custom nav-tabs-header">
+								<!-- Nav tabs -->
+								<ul class="nav nav-tabs pull-right" role="tablist">
+								  <li role="presentation" class="active"><a href="#doc-pat" role="tab" data-toggle="tab">医患对比</a></li>
+								  <li role="presentation"><a href="#watch" role="tab" data-toggle="tab">观看时间</a></li>
+								</ul>
+								<div class="tab-content ">
+								  <div role="tabpanel" class="tab-pane fade in active"  id="doc-pat">
+								  	<div id="bar_doctor" class="chartbox" style="height:700px"></div>
+								  </div>
+								  <div role="tabpanel" class="tab-pane fade" id="watch">
+								  	<button class="btn btn-sm btn-success pull-right" id = "change_log" style="position:relative;z-index:99">log转换</button>
+									<div id="bar_viewer" class="chartbox" style="height:700px"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+		<div class="footer">
+			北京盖德医学数据分析研究中心
+		</div>
+		<script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var Map_doctor_chart = echarts.init(document.getElementById('map_doctor'));
+        var Map_hospital_chart = echarts.init(document.getElementById('map_hostipal'));
+        var Pie_keshi_chart = echarts.init(document.getElementById('keshi_pie'));
+        var Pie_course_chart = echarts.init(document.getElementById('course_cal'));
+        var Date_info_chart = echarts.init(document.getElementById('date_line'));
+        var Bar_doctor_chart = echarts.init(document.getElementById('bar_doctor'));
+        var Bar_viewer_chart = echarts.init(document.getElementById('bar_viewer'));
+		var selectedProvince;
+        var map_doctor_option = map_doctor_option(eval('(' +  '${Doc_prov1}' + ')'));
+        var map_hospital_option = map_hostipal_option(eval('(' +  '${Hos_prov1}' + ')'));
+        
+        Map_doctor_chart.on('mapselectchanged', function(param) {
+    		var selected = param.selected;
+    		
+    		var name;
+    		for(var i = 0, l = map_doctor_option.series[0].data.length; i < l; i++) {
+    			name = map_doctor_option.series[0].data[i].name;
+    			map_doctor_option.series[0].data[i].selected = selected[name];
+    			if(selected[name]) {
+    				selectedProvince = name;
+    				getDocTable(selectedProvince);
+    			}
+    		}
+    		if(typeof selectedProvince == 'undefined') {
+    			map_doctor_option.series.splice(1);
+    			getDocTable(selectedProvince);
+    			Map_doctor_chart.setOption(map_doctor_option, true);
+    			return;
+    		}
+    		var select_option_series = selectprovince(selectedProvince,eval('(' +  '${Doc_city1}' + ')'),'医生人数');
+    		map_doctor_option.series[0].layoutCenter= ['15%', '15%'],
+    		map_doctor_option.series[0].layoutSize=100;
+    		map_doctor_option.series[0].label.normal.textStyle.fontSize=3;
+    		map_doctor_option.series[1] = select_option_series;
+    		
+    		Map_doctor_chart.setOption(map_doctor_option, true);
+    	});
+        
+        Map_hospital_chart.on('mapselectchanged', function(param) {
+    		var selected = param.selected;
+    		var selectedProvince;
+    		var name;
+    		for(var i = 0, l = map_hospital_option.series[0].data.length; i < l; i++) {
+    			name = map_hospital_option.series[0].data[i].name;
+    			map_hospital_option.series[0].data[i].selected = selected[name];
+    			if(selected[name]) {
+    				selectedProvince = name;
+    				getHosTable(selectedProvince);
+    			}
+    		}
+    		if(typeof selectedProvince == 'undefined') {
+    			map_hospital_option.series.splice(1);
+    			Map_hospital_chart.setOption(map_hospital_option, true);
+    			return;
+    		}
+    		var select_option_series = selectprovince(selectedProvince,eval('(' +  '${Hos_city1}' + ')'),'医院数量');
+    		map_hospital_option.series[0].layoutCenter=['15%', '15%'],
+    		map_hospital_option.series[0].layoutSize=100;
+    		map_hospital_option.series[0].label.normal.textStyle.fontSize=3;
+    		map_hospital_option.series[1] = select_option_series;
+    		Map_hospital_chart.setOption(map_hospital_option, true);
+    	});
+    	var keshi_legend_list = [];
+    	<c:forEach var="item" items="${Pie_keshi}" varStatus="status">
+    	keshi_legend_list.push('${item.keshi_name}');
+    	</c:forEach> 
+    	var keshi_data_list = [];
+		<c:forEach var="item" items="${Pie_keshi}" varStatus="status">
+		var keshi_dict= {};
+		keshi_dict["name"]='${item.keshi_name}';
+		keshi_dict["value"]=${item.keshi_num};
+		keshi_data_list.push(keshi_dict);
+		</c:forEach>
+		var pie_keshi_option = pie_keshi(keshi_legend_list,keshi_data_list);
+		
+		var course_legend_list = [];
+    	var course_data_list = [];
+		<c:forEach var="item" items="${Pie_course}" varStatus="status">
+		var course_dict= {};
+		course_legend_list.push('${item.kecheng_name}');
+		course_dict["name"]='${item.kecheng_name}';
+		course_dict["value"]=${item.kecheng_num};
+		course_data_list.push(course_dict);
+		</c:forEach>
+		var pie_course_option = pie_course(course_legend_list,course_data_list);
+		
+		date_legend_list=[];
+		date_data1_list=[];
+		date_data2_list=[];
+		<c:forEach var="item" items="${Line_date}" varStatus="status">
+		date_legend_list.push('${item.date}');
+		
+		date_data1_list.push(parseInt('${item.course_num}'));
+		date_data2_list.push(parseInt('${item.doctor_reg_num}'));
+		</c:forEach>
+		var date_line_option = new_date_line(date_legend_list,date_data1_list,date_data2_list); 
+	
+		bar1_legend_list=[];
+		bar1_data1_list=[];
+		bar1_data2_list=[];
+		<c:forEach var="item" items="${Bar_doctor}" varStatus="status">
+		bar1_legend_list.push('${item.course_name}');
+		bar1_data1_list.push(parseInt('${item.doctor_num}')*15);
+		bar1_data2_list.push(parseInt('${item.patient_num}'));
+		</c:forEach>
+		
+		var bar_doctor_option = bar1(bar1_legend_list,bar1_data1_list,bar1_data2_list);
+		
+		bar2_legend_list=[];
+		bar2_data1_list=[];
+		bar2_data2_list=[];
+		<c:forEach var="item" items="${Bar_viewer}" varStatus="status">
+		bar2_legend_list.push('${item.course_name}');
+		bar2_data1_list.push(parseInt('${item.patient_num}'));
+		bar2_data2_list.push(parseInt('${item.timeperviewer}'));
+		</c:forEach>
+		
+		var bar_viewer_option = bar2(bar2_legend_list,bar2_data1_list,bar2_data2_list);
+		
+        // 使用刚指定的配置项和数据显示图表。
+        Map_doctor_chart.setOption(map_doctor_option);
+        Map_hospital_chart.setOption(map_hospital_option);
+        Pie_keshi_chart.setOption(pie_keshi_option);
+        Pie_course_chart.setOption(pie_course_option);
+        Date_info_chart.setOption(date_line_option);
+        Bar_doctor_chart.setOption(bar_doctor_option);
+        Bar_viewer_chart.setOption(bar_viewer_option);
+		
+		setTimeout(function (){ 
+             window.onresize = function () { 
+            	 Map_doctor_chart.resize(); 
+            	 Map_hospital_chart.resize(); 
+            	 Pie_course_chart.resize(),
+            	 Pie_keshi_chart.resize(); 
+            	 Date_info_chart.resize();
+            	 Bar_doctor_chart.resize();
+            	 Bar_viewer_chart.resize();
+             } 
+        },200);
+		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+		       // 获取已激活的标签页的名称
+				Map_doctor_chart.resize(); 
+				Map_hospital_chart.resize(); 
+				Pie_keshi_chart.resize();
+				Pie_course_chart.resize(),
+				Date_info_chart.resize();
+				Bar_doctor_chart.resize();
+				Bar_viewer_chart.resize();
+	       });
+		$("#back-china").on("click",function(){
+			map_doctor_option.series[0].layoutCenter= ['50%', '50%'];
+    		map_doctor_option.series[0].layoutSize=300;
+    		map_doctor_option.series[0].label.normal.textStyle.fontSize=6;
+    		map_doctor_option.series.splice(1);
+    		for (var i = 0; i < map_doctor_option.series[0].data.length; i++) {
+				map_doctor_option.series[0].data[i].selected = false;
+				} 
+    		Map_doctor_chart.setOption(map_doctor_option,true);
+    		$(this).parent(".pro-city").hide();
+    		$(this).parent(".pro-city").siblings(".whole-country").show();
+    		$("#city-name").text("全国");
+		 });
+		$("#back-china2").on("click",function(){
+			map_hospital_option.series[0].layoutCenter= ['50%', '50%'];
+			map_hospital_option.series[0].layoutSize=300;
+			map_hospital_option.series[0].label.normal.textStyle.fontSize=6;
+			map_hospital_option.series.splice(1);
+			for (var i = 0; i < map_hospital_option.series[0].data.length; i++) {
+				map_hospital_option.series[0].data[i].selected = false;
+			}
+    		Map_hospital_chart.setOption(map_hospital_option,true);
+    		$(this).parent(".pro-city").hide();
+    		$(this).parent(".pro-city").siblings(".whole-country").show();
+    		$("#city-name2").text("全国");
+		 });
+	function getDocTable(selectedProvince){
+		var htm ="<tr><th>城市</th><th>数量</th></tr>";
+		$("#city-name").text(selectedProvince);
+		 $.ajax({
+    		 type:"get",
+    		 url:"getcity_data",
+    		 data:{selectedProvince:encodeURI(selectedProvince)},
+    		 success:function(data){
+    			 var obj = eval('(' + data + ')');
+    			 for(i in obj){
+    				 htm += "<tr><td>"+obj[i].city_name+"</td><td>"+obj[i].city_num+"</td></tr>";
+    			 }
+    			 $("#doc_city_table tbody").html(htm);
+    		 },
+    	  });
+		 $("#doc-city").show();
+		 $("#doc-pro").hide();
+	};
+	function getHosTable(selectedProvince){
+		var htm ="<tr><th>城市</th><th>数量</th></tr>";
+		$("#city-name2").text(selectedProvince);
+		 $.ajax({
+    		 type:"get",
+    		 url:"gethoscity_data",
+    		 data:{selectedProvince:encodeURI(selectedProvince)},
+    		 success:function(data){
+    			 var obj = eval('(' + data + ')');
+    			 for(i in obj){
+    				 htm += "<tr><td>"+obj[i].city_name+"</td><td>"+obj[i].city_num+"</td></tr>";
+    			 }
+    			 $("#hos_city_table tbody").html(htm);
+    		 },
+    	  });
+		 $("#hos-city").show();
+		 $("#hos-pro").hide();
+	};
+	$("#change_log").on("click",function(){
+		if (bar_viewer_option.xAxis.type == "log"){
+			bar_viewer_option.xAxis.type = 'value';
+			Bar_viewer_chart.setOption(bar_viewer_option);
+		}else{
+			bar_viewer_option.xAxis.type = 'log';
+			Bar_viewer_chart.setOption(bar_viewer_option);
+		} 
+	});
+	
+    </script>
+	</body>
+</html>
+

@@ -1,0 +1,16 @@
+package com.backup;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service("coursedoctorpatientService")
+public class CourseDoctorPatientServiceImpl implements CourseDoctorPatientService {
+	@Autowired
+	private CourseDoctorPatientMapper CourseDoctorPatientMapper;
+
+	public List<CourseDoctorPatient> query() {
+		return CourseDoctorPatientMapper.query();
+	}
+}

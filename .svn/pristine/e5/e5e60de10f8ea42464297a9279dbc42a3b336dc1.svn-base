@@ -1,0 +1,38 @@
+package com.guide.pojo;
+
+public class CoursePatientViewer {
+	private String course_name;
+	private Integer patient_num;
+	private Integer timeperviewer;
+
+	public String getCourse_name() {
+		return course_name;
+	}
+
+	public void setCourse_name(String course_name) {
+		this.course_name = course_name;
+	}
+
+	public Integer getPatient_num() {
+		return patient_num;
+	}
+
+	public void setPatient_num(Integer patient_num) {
+		this.patient_num = patient_num;
+	}
+
+	public Integer getTimeperviewer() {
+		return timeperviewer;
+	}
+
+	public void setTimeperviewer(Integer timeperviewer) {
+		this.timeperviewer = timeperviewer;
+	}
+
+	@Override
+	public String toString() {
+		return "[course_name=" + course_name + ", patient_num=" + patient_num + ", timeperviewer="
+				+ timeperviewer + "]";
+	}
+
+}

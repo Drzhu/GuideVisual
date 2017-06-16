@@ -1,0 +1,45 @@
+/**
+ * 
+ */
+function selectprovince(selectedProvince,doc_city_list,name) {
+	var option = {
+			layoutCenter: ['50%', '75%'],
+			// 如果宽高比大于 1 则宽度为 100，如果小于 1 则高度为 100，保证了不超过 100x100 的区域
+			layoutSize: 200,
+			name: name,
+			type: 'map',
+			mapType: selectedProvince,
+			showLegendSymbol: false,
+			label: {
+				normal: {
+					show: true,
+					textStyle: {
+						fontSize: 5,
+					}
+				},
+				emphasis: {
+					show: true,
+					textStyle: {
+						fontStyle: 'oblique',
+						fontSize: 5,
+					}
+				}
+			},
+			legend:{
+				orient: 'vertical',
+    			x: 'left',
+    			data: [name]
+			},
+			visualMap:{
+				min: 0,
+    			max: 200,
+    			x: 'left',
+    			y: 'bottom',
+    			color: ['orangered','yellow','lightskyblue'],
+    			text: ['高', '低'], // 文本，默认为数值文本
+    			calculable: true
+			},
+			data:doc_city_list,
+		};
+	return option;
+}

@@ -1,0 +1,22 @@
+package com.guide.dao;
+
+import java.util.List;
+
+import com.guide.pojo.User;
+
+
+public interface UserDao {
+	/*public int delete(Integer id);
+
+	public int addUser(User record);
+
+	public User getUser(String id);
+
+	public int updateUser(User record);*/
+
+	public List<User> getAllUsers();
+	
+	public int addUser(User record);
+	
+	public int delUser(Integer id);
+}

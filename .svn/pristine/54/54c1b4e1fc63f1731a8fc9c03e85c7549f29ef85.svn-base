@@ -1,0 +1,28 @@
+package com.guide.community.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.guide.community.mapper.CommunityDetailInfoMapper;
+import com.guide.community.pojo.CommunityDetailInfo;
+
+@Service("community_detail_infoService")
+public class CommunityDetailInfoServiceImpl implements CommunityDetailInfoService {
+	@Autowired
+	private CommunityDetailInfoMapper community_detailInfoMapper;
+
+	public List<CommunityDetailInfo> query_keshi(String keshi_name) {
+		return community_detailInfoMapper.query_keshi(keshi_name);
+	}
+
+	public List<CommunityDetailInfo> datatable_query(int start, String keshi_name) {
+		return community_detailInfoMapper.datatable_query(start, keshi_name);
+	}
+
+	public int query_count(String str) {
+		return community_detailInfoMapper.query_count(str);
+	}
+
+}

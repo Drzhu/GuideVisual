@@ -1,0 +1,9 @@
+package com.guide.service;
+
+import java.util.List;
+
+import com.guide.pojo.DateCourseReg;
+
+public interface DateCourseRegService {
+	List<DateCourseReg> query();
+}

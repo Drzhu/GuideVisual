@@ -1,0 +1,123 @@
+package com.guide.controller;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.guide.pojo.Course;
+import com.guide.pojo.CourseDoctorPatient;
+import com.guide.pojo.CoursePatientViewer;
+import com.guide.pojo.DateCourseReg;
+import com.guide.pojo.Doctor;
+import com.guide.pojo.Hospital;
+import com.guide.pojo.Keshi;
+import com.guide.service.CourseDoctorPatientService;
+import com.guide.service.CoursePatientViewerService;
+import com.guide.service.CourseService;
+import com.guide.service.DateCourseRegService;
+import com.guide.service.DoctorService;
+import com.guide.service.HospitalService;
+import com.guide.service.KeshiService;
+import com.guide.utils.JsonUtil;
+
+@Controller
+@RequestMapping("/")
+public class DataController {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat fmr = new SimpleDateFormat("MM-dd");
+		DecimalFormat df = new DecimalFormat();
+		// 处理业务逻辑的userService
+		@Resource(name = "doctorService")
+		private DoctorService doctorService;
+		@Resource(name = "hospitalService")
+		private HospitalService hospitalService;
+		@Resource(name = "keshiService")
+		private KeshiService keshiService;
+		@Resource(name = "courseService")
+		private CourseService courseService;
+		@Resource(name = "datecourseregService")
+		private DateCourseRegService datecourseregService;
+		@Resource(name = "coursedoctorpatientService")
+		private CourseDoctorPatientService coursedoctorpatientService;
+		@Resource(name = "coursepatientviewerService")
+		private CoursePatientViewerService coursepatientviewerService;
+		
+		@RequestMapping(value = "getcity_data", method = RequestMethod.GET,produces="text/plain;charset=UTF-8")
+		@ResponseBody
+		public String hypt(HttpServletRequest request,@RequestParam("selectedProvince") String selectedProvince) throws Exception {
+			selectedProvince = java.net.URLDecoder.decode(selectedProvince, "UTF-8");  
+			List<Doctor> list = doctorService.getdata_city(selectedProvince);
+			return JsonUtil.object2json(list);
+		}
+		
+		@RequestMapping(value = "gethoscity_data", method = RequestMethod.GET,produces="text/plain;charset=UTF-8")
+		@ResponseBody
+		public String gethoscity_data(HttpServletRequest request,@RequestParam("selectedProvince") String selectedProvince) throws Exception {
+			selectedProvince = java.net.URLDecoder.decode(selectedProvince, "UTF-8");  
+			List<Hospital> list = hospitalService.getdata_city(selectedProvince);
+			return JsonUtil.object2json(list);
+		}
+		
+		@SuppressWarnings("unchecked")
+		@RequestMapping(value = "main", method = RequestMethod.GET,produces="text/plain;charset=UTF-8")
+		public String main(HttpServletRequest request){
+			List<Doctor> doc_prov = doctorService.query_prov();
+			List<Doctor> doc_city = doctorService.query_city();
+			List<Hospital> hos_prov = hospitalService.query_prov();
+			List<Hospital> hos_city = hospitalService.query_city();
+			List<Keshi> keshi_list = keshiService.query();
+			List<Course> course_list = courseService.query();
+			List<DateCourseReg> datecoursereg_list = datecourseregService.query();
+			List<CourseDoctorPatient> CourseDoctorPatient_list = coursedoctorpatientService.query();
+			List<CoursePatientViewer> CoursePatientViewer_list = coursepatientviewerService.query();
+			System.out.println(datecoursereg_list);
+			JSONArray Doc_arr_prov = new JSONArray(); 
+			for(Doctor doc:doc_prov){
+				JSONObject Doc_obj = new JSONObject();
+				Doc_obj.put("name", doc.getProv_name());
+				Doc_obj.put("value", doc.getProv_num());
+				Doc_arr_prov.add(Doc_obj);
+			}
+			JSONArray Doc_arr_city = new JSONArray(); 
+			for(Doctor doc:doc_city){
+				JSONObject Doc_obj = new JSONObject();
+				Doc_obj.put("name", doc.getCity_name());
+				Doc_obj.put("value", doc.getCity_num());
+				Doc_arr_city.add(Doc_obj);
+			}
+			JSONArray Hos_arr_prov = new JSONArray(); 
+			for(Hospital hos:hos_prov){
+				JSONObject Hos_obj = new JSONObject();
+				Hos_obj.put("name", hos.getProv_name());
+				Hos_obj.put("value", hos.getProv_num());
+				Hos_arr_prov.add(Hos_obj);
+			}
+			JSONArray Hos_arr_city = new JSONArray(); 
+			for(Hospital hos:hos_city){
+				JSONObject Hos_obj = new JSONObject();
+				Hos_obj.put("name", hos.getCity_name());
+				Hos_obj.put("value", hos.getCity_num());
+				Hos_arr_city.add(Hos_obj);
+			}
+			request.setAttribute("Doc_prov", Doc_arr_prov);
+			request.setAttribute("Doc_city", Doc_arr_city);
+			request.setAttribute("Hos_prov", Hos_arr_prov);
+			request.setAttribute("Hos_city", Hos_arr_city);
+			request.setAttribute("Pie_keshi", keshi_list);
+			request.setAttribute("Pie_course", course_list);
+			request.setAttribute("Line_date", datecoursereg_list);
+			request.setAttribute("Bar_doctor", CourseDoctorPatient_list);
+			request.setAttribute("Bar_viewer", CoursePatientViewer_list);
+			return "index";
+		}
+	}

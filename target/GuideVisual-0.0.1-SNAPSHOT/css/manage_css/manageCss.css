@@ -1,0 +1,80 @@
+*{font-family: "microsoft yahei";}
+body{padding-top: 60px; background-color: #F1F4F7;}
+.navbar-default{background-color: #fff;}
+.footer{padding: 40px 0; color: #ccc;  text-align: center; background-color: #444; border-top: 1px solid #e5e5e5;}
+.login-box{width:400px; margin: 5% auto;}
+.login-box  p{ text-align: center;}
+.login-box .login-logo{font-size: 30px; text-align: center; margin-bottom: 20px;}
+.login-box .login-box-body{padding: 20px; background-color: #fff; box-shadow: 0 0 4px rgba(0,0,0,.2);}
+.login-box form .form-control{padding-left: 30px !important;}
+.login-box form .form-group  i.onlyicon{
+	color: #bbb;
+    display: block !important;
+    font-size: 16px;
+    height: 16px;
+    margin: 9px 2px 4px 10px;
+    position: absolute !important;
+    text-align: center;
+    width: 16px;
+    z-index: 1;
+}
+.login-help{padding: 10px 0 20px 0;}
+
+.nav-tabs-custom{
+	margin: 10px 0 20px 0;
+	box-shadow: 0 0 1px rgba(0,0,0,.09);
+}
+.nav-tabs-custom>.nav-tabs{
+	background-color: #f9f9f9;
+}
+.nav-tabs-custom>.tab-content{
+	background-color: #fff;
+	padding:10px;
+}
+.cos-tabs>li{width:25%;}
+.nav-tabs-custom>.nav-tabs>li {
+    border-top: 3px solid transparent;
+    margin-bottom: -2px;
+    text-align: center;
+}
+.nav-tabs-custom>.nav-tabs>li.active {
+    border-top-color: #3c8dbc;
+}
+.nav-tabs-custom>.nav-tabs>li>a, .nav-tabs-custom>.nav-tabs>li>a:hover {
+    background: transparent;
+    margin: 0;
+}
+.nav-tabs-custom>.cos-tabs>li.active>a,.nav-tabs-custom>.nav-tabs>li.active>a:hover{
+    border-top-color: transparent;
+    border-left-color: #ddd;
+    border-right-color: #ddd;
+}
+.nav-tabs-custom>.nav-tabs>li.active>a, .nav-tabs-custom>.nav-tabs>li.active:hover>a {
+    background-color: #fff;
+    color: #444;
+}
+.nav-tabs-custom>.nav-tabs>li>a, .nav-tabs-custom>.nav-tabs>li>a:hover {
+    background: transparent;
+    margin: 0;
+}        
+.nav-tabs-custom>.nav-tabs>li>a:hover{
+	border:1px solid transparent;
+}
+.nav-tabs-custom>.nav-tabs>li:first-of-type>a,.nav-tabs-custom>.nav-tabs>li:first-of-type>a:hover{
+    border-left-color: transparent;
+}
+.nav-tabs-custom>.nav-tabs>li:last-of-type>a,.nav-tabs-custom>.nav-tabs>li:last-of-type>a:hover{
+    border-right-color: transparent;
+}
+
+
+
+
+
+
+
+
+
+@media screen and (max-width:768px ) {
+	.login-box{width:90%;}
+}

@@ -1,0 +1,9 @@
+package com.guide.community.service;
+
+import java.util.List;
+
+import com.guide.community.pojo.CommunityKechengPatientViewer;;
+
+public interface CommunityKechengPatientViewerService {
+	List<CommunityKechengPatientViewer> query();
+}

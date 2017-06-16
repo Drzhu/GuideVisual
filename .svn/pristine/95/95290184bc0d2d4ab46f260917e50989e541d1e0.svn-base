@@ -1,0 +1,12 @@
+package com.guide.community.service;
+
+import java.util.List;
+
+import com.guide.community.pojo.CommunityHospital;
+
+public interface CommunityHospitalService {
+
+	List<CommunityHospital> query_prov();
+	List<CommunityHospital> query_city();
+	List<CommunityHospital> getdata_city(String selectedProvince);
+}

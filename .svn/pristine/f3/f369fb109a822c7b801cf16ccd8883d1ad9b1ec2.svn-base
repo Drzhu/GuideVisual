@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+	<servlet-mapping>
+		<servlet-name>default</servlet-name>
+		<url-pattern>/js/*</url-pattern>
+		<url-pattern>/css/*</url-pattern>
+		<url-pattern>/img/*</url-pattern>
+		<url-pattern>/font-awesome-4.6.3/*</url-pattern>
+		<url-pattern>/fonts/*</url-pattern>
+		<url-pattern>/echarts/*</url-pattern>
+		<url-pattern>/scripts/*</url-pattern>
+		<url-pattern>/styles/*</url-pattern>
+	</servlet-mapping>
+	<!-- 设计路径变量值 -->
+	<context-param>
+		<param-name>webAppRootKey</param-name>
+		<param-value>GuideVisual.root</param-value>
+	</context-param>
+	<!-- 配置日志管理 -->
+	<context-param>
+		<!-- 配置日志文件的路径 -->
+		<param-name>log4jConfigLocation</param-name>
+		<param-value>classpath:config/log4j.properties</param-value>
+	</context-param>
+	<context-param>
+		<!-- 配置日志刷新的时间间隔 -->
+		<param-name>log4jRefreshInterval</param-name>
+		<param-value>6000</param-value>
+	</context-param>
+	<!-- 配置spring的字符集过滤器 -->
+	<filter>
+		<filter-name>SpringEncodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+    <filter-mapping>  
+        <filter-name>SpringEncodingFilter</filter-name>  
+        <url-pattern>/*</url-pattern>  
+    </filter-mapping>  
+	<!-- 配置spring的监听器 -->
+	<listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<!-- 读取spring 的配置文件 -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:config/spring_mybatis.xml</param-value>
+	</context-param>
+	<!-- springmvc 的核心配置 -->
+	<servlet>
+		<servlet-name>spring</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:config/spring_mvc.xml</param-value>
+		</init-param>
+		<!-- 设置执行的优先级 -->
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>spring</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	<welcome-file-list>
+		<welcome-file>login.jsp</welcome-file>
+	</welcome-file-list>
+	<!-- 配置异常错误页面 -->
+	<error-page>
+		<!-- 路径不正确 -->
+		<error-code>404</error-code>
+		<location>/WEB-INF/errorpage/404.jsp</location>
+	</error-page>
+	<error-page>
+		<!-- 没有访问权限，访问被禁止 -->
+		<error-code>405</error-code>
+		<location>/WEB-INF/errorpage/405.jsp</location>
+	</error-page>
+	<error-page>
+		<!-- 内部错误 -->
+		<error-code>500</error-code>
+		<location>/WEB-INF/errorpage/500.jsp</location>
+	</error-page>
+
+	<error-page>
+		<!-- 内部错误 -->
+		<error-code>501</error-code>
+		<location>/WEB-INF/errorpage/5001.jsp</location>
+	</error-page>
+	<error-page>
+		<!-- 内部错误 -->
+		<error-code>502</error-code>
+		<location>/WEB-INF/errorpage/5002.jsp</location>
+	</error-page>
+</web-app>

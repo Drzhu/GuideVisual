@@ -1,0 +1,44 @@
+package com.backup;
+
+import java.io.Serializable;
+
+public class CourseDoctorPatient implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private String course_name;
+	private Integer doctor_num;
+	private Integer patient_num;
+
+	public String getCourse_name() {
+		return course_name;
+	}
+
+	public void setCourse_name(String course_name) {
+		this.course_name = course_name;
+	}
+
+	public Integer getDoctor_num() {
+		return doctor_num;
+	}
+
+	public void setDoctor_num(Integer doctor_num) {
+		this.doctor_num = doctor_num;
+	}
+
+	public Integer getPatient_num() {
+		return patient_num;
+	}
+
+	public void setPatient_num(Integer patient_num) {
+		this.patient_num = patient_num;
+	}
+
+	@Override
+	public String toString() {
+		return "[course_name=" + course_name + ", doctor_num=" + doctor_num + ", patient_num="
+				+ patient_num + "]";
+	}
+
+}

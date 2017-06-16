@@ -1,0 +1,44 @@
+package com.guide.pojo;
+
+import java.io.Serializable;
+
+public class DateCourseReg implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private String date;
+	private Integer course_num;
+	private Integer doctor_reg_num;
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public Integer getCourse_num() {
+		return course_num;
+	}
+
+	public void setCourse_num(Integer course_num) {
+		this.course_num = course_num;
+	}
+
+	public Integer getDoctor_reg_num() {
+		return doctor_reg_num;
+	}
+
+	public void setDoctor_reg_num(Integer doctor_reg_num) {
+		this.doctor_reg_num = doctor_reg_num;
+	}
+
+	@Override
+	public String toString() {
+		return "[date=" + date + ", course_num=" + course_num + ", doctor_reg_num=" + doctor_reg_num
+				+ "]";
+	}
+
+}

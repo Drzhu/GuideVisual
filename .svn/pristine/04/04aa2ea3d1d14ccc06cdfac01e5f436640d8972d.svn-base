@@ -1,0 +1,10 @@
+package com.backup;
+
+import java.util.List;
+
+public interface HospitalService {
+
+	List<Hospital> query_prov();
+	List<Hospital> query_city();
+	List<Hospital> getdata_city(String selectedProvince);
+}

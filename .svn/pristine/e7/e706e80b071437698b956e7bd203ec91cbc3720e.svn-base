@@ -1,0 +1,23 @@
+package com.guide.pojo;
+
+public class Project {
+	private String name;//课程名称
+	private String num;//课程数目
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getNum() {
+		return num;
+	}
+	public void setNum(String num) {
+		this.num = num;
+	}
+	@Override
+	public String toString() {
+		return "Project [name=" + name + ", num=" + num + "]";
+	}
+	
+}

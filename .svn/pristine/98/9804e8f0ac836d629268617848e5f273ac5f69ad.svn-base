@@ -1,0 +1,799 @@
+<%@ page language="java" pageEncoding="UTF-8"%>
+<%--引入JSTL核心标签库 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!doctype html>
+<html lang="">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>中交数据中心</title>
+
+<link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+
+<header>
+<input id="hy_input" type="text" hidden="true">
+<input id="hy_input_02" type="text" hidden="true">
+	<section class="top-tab-bar">
+		<ul id="tabNav">
+			<li>最近7天</li>
+			<li>最近5周</li>
+		</ul>
+	</section>
+	
+</header>
+
+<article class="container">
+
+<div id ="hy_seven" hidden="true">
+    <c:forEach var="hy" items="${hy_seven}">
+   <fmt:formatDate value="${hy.date_day}" type="date" pattern='MM-dd'/>@
+    </c:forEach>
+    </div>
+    <div id ="hy_reg_data" hidden="true">
+    <c:forEach var="hy_reg" items="${hy_seven}">
+   ${hy_reg.day_vehicle_num}@
+    </c:forEach>
+    </div>
+    <div id ="hy_online_data" hidden="true">
+    <c:forEach var="hy_reg" items="${hy_seven}">
+   ${hy_reg.day_vehicle_lineup_inc_num}@
+    </c:forEach>
+    </div>
+    <div id ="hy_trip_rate" hidden="true">
+    <c:forEach var="hy_reg" items="${hy_seven}">
+   ${hy_reg.day_locus_complete_ratio}@
+    </c:forEach>
+    </div>
+    <div id ="hy_online_rate" hidden="true">
+    <c:forEach var="hy_reg" items="${hy_seven}">
+   ${hy_reg.day_time_online_ratio}@
+    </c:forEach>
+    </div>
+    <!-- 五周数据 -->
+    <div id ="five" hidden="true">
+    <c:forEach var="hy" items="${hy_five}">
+     ${hy.week_of_year}@
+    </c:forEach>
+    </div>
+     <div id ="five_reg" hidden="true">
+    <c:forEach var="hy_reg" items="${hy_five}">
+   ${hy_reg.day_vehicle_num}@
+    </c:forEach>
+    </div><div id ="five_online" hidden="true">
+    <c:forEach var="hy_reg" items="${hy_five}">
+   ${hy_reg.week_vehicle_lineup_inc_num}@
+    </c:forEach>
+    </div>
+    
+	<div id="tabCon" class="tab-con-box">
+
+		<div class="tab-con">
+			<div class="chart-box">
+			<div id="hy_reg" class="echart"></div><div id="hy_online" class="echart"></div>
+			<div id="trip" class="echart" hidden="true"></div><div id="online_rate" class="echart" hidden="true"></div>
+			</div>
+		</div>
+
+		<div class="tab-con">
+			<div class="chart-box">
+				<div id = "hy_five_reg" class="echart"></div><div id ="hy_five_online" class="echart"></div>
+				<div id="five_trip" class="echart" hidden="true"></div><div id="five_online_rate" class="echart" hidden="true"></div>
+				<div id="five_right_rate" class="echart" hidden="true"></div>
+			</div>
+		</div>
+	</div>
+</article>
+
+<script src="scripts/zepto.min.js"></script>
+<script src="echarts/dist/echarts.js"></script>
+<script src="scripts/main.js"></script>
+<script>
+	$(function(){
+		new PubTab({
+			tabTag: document.querySelector('#tabNav'),
+			tabCon: document.querySelector('#tabCon')
+		});
+		sW = $(window).width();
+		$('.echart').css({
+			width: sW
+		})
+	});
+</script>
+<script type="text/javascript">
+var hy_list = [];
+var five_list = [];
+var hy_reg_list=[];
+var hy_online_list=[];
+var hy_trip_list=[];
+var hy_online_rate_list=[];
+var five_reg_list=[];
+var five_online_list=[];
+
+var hy = $("#hy_seven").text().trim().split("@");
+var hy_reg_data = $("#hy_reg_data").text().trim().split("@");
+var hy_online_data = $("#hy_online_data").text().trim().split("@");
+var hy_trip_rate = $("#hy_trip_rate").text().trim().split("@");
+var hy_online_rate = $("#hy_online_rate").text().trim().split("@");
+
+for (var i = hy.length-1; i >0; i--) {
+	hy_list.push(hy[i-1].trim());
+	hy_reg_list.push(parseInt(hy_reg_data[i-1].trim()));
+	hy_online_list.push(parseInt(hy_online_data[i-1].trim()));
+	hy_trip_list.push(parseInt(hy_trip_rate[i-1].trim()));
+	hy_online_rate_list.push(parseInt(hy_online_rate[i-1].trim()));
+}
+var five =  $("#five").text().trim().split("@");
+var five_reg = $("#five_reg").text().trim().split("@");
+var five_online = $("#five_online").text().trim().split("@");
+for (var i = 0; i < five_reg.length-1; i++) {
+	five_list.push(five[i].trim());
+	five_reg_list.push(parseInt(five_reg[i].trim()));
+	five_online_list.push(parseInt(five_online[i].trim()))
+}
+console.log(hy_list);
+console.log(hy_online_list);
+        // 路径配置
+        require.config({
+            paths: {
+                echarts: '<%=request.getContextPath() %>/echarts/dist'
+            }
+        });
+        // 使用
+        require(
+            [
+                'echarts',
+                'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+                'echarts/chart/line'
+            ],
+            function (ec) {
+                // 基于准备好的dom，初始化echarts图表
+                var hy_reg = ec.init(document.getElementById('hy_reg'));
+                var hy_online = ec.init(document.getElementById('hy_online'));
+                var trip = ec.init(document.getElementById('trip'));
+                var online_rate = ec.init(document.getElementById('online_rate'));
+                //五周
+                var hy_five_reg = ec.init(document.getElementById('hy_five_reg'));
+                var hy_five_online = ec.init(document.getElementById('hy_five_online'));
+                var five_online_rate = ec.init(document.getElementById('five_online_rate'));
+                var five_trip = ec.init(document.getElementById('five_trip'));
+                var five_right_rate = ec.init(document.getElementById('five_right_rate'));
+         //7天注册车辆数
+        var op_hy_reg = {
+        		  title : {
+        			  subtext:"（单位：万）",
+        			  subtextStyle:{
+        				  fontSize:9,
+        				  align:"left",
+        			  }
+        		    },
+        	    tooltip : {
+        	        trigger: 'axis'
+        	    },
+        	    legend: {
+        	        data:['注册车辆数'],
+        	        textStyle:{
+        	        	fontSize:14,
+        	        	fontWeight:'bold'
+        	        },
+        	        x:'left',
+        	        y:'top'
+        	    },
+        	    grid:{
+        	    	x:40,
+        	    	y:60,
+        	    	x2:30,
+        	    	y2:40
+        	    },
+        	    xAxis : [
+        	        {
+        	            type : 'category',
+        	            boundaryGap : false,
+        	            axisLine:false,
+        	            axisTick:false,
+        	            data : hy_list
+        	        }
+        	    ],
+        	    yAxis : [
+        	        {
+        	            type : 'value',
+        	            axisLine:false,
+        	            scale: true,        	            
+        	            axisLabel : {
+        	                formatter: function (value){
+        	                	var n = value/10000;
+        	                	return n}
+        	            }
+        	        }
+        	    ],
+        	    series : [
+        	        {
+        	            name:'注册车辆数',
+        	            symbol:'emptyCircle',
+        	            type:'line',
+        	            data:hy_reg_list,
+        	            itemStyle:{
+        	            	normal:{color:'#42B4E3'}
+        	            }
+        	        },
+        	    ]
+        	};
+        //7天轨迹完整率
+        var op_trip = {
+        		title:{
+        			subtext: '数据缺失'
+        		},
+        		 tooltip : {
+          	        trigger: 'axis'
+          	    },
+          	    legend: {
+          	        data:['轨迹完整率'],
+          	        textStyle:{
+          	        	fontSize:14,
+          	        	fontWeight:'bold'
+          	        },
+          	        x:'left',
+          	        y:'top'
+          	    },
+          	    grid:{
+          	    	x:40,
+          	    	y:30,
+          	    	x2:30,
+          	    	y2:40
+          	    },
+          	    xAxis : [
+          	        {
+          	            type : 'category',
+          	            boundaryGap : false,
+          	            axisLine:false,
+          	            axisTick:false,
+          	            data : hy_list
+          	        }
+          	    ],
+          	    yAxis : [
+          	        {
+          	            type : 'value',
+          	            boundaryGap:[0.5,0.5],
+          	            axisLine:false,
+          	            scale: true,  
+          	           splitNumber:6,
+          	            axisLabel : {
+          	                formatter: function (value){
+          	                	var n = value*100;
+          	                	return n+"%"}
+          	            }
+          	        }
+          	    ],
+          	    series : [
+          	        {
+          	            name:'轨迹完整率',
+          	            symbol:'emptyCircle',
+          	            type:'line',
+          	            data:hy_trip_list,
+          	            itemStyle:{
+          	            	normal:{color:'#42B4E3'}
+          	            }
+          	        },
+          	    ]
+          	};
+        //7天内上线车辆数
+        var op_hy_online = {
+        		title : {
+      			  subtext:"（单位：万）",
+      			  subtextStyle:{
+      				  fontSize:9,
+      				  align:"left",
+      			  }
+      		    },
+        		 tooltip : {
+         	        trigger: 'axis'
+         	    },
+         	    legend: {
+         	        data:['上线车辆数'],
+         	        textStyle:{
+         	        	fontSize:14,
+         	        	fontWeight:'bold'
+         	        },
+         	        x:'left',
+         	        y:'top'
+         	    },
+         	    grid:{
+         	    	x:40,
+         	    	y:60,
+         	    	x2:30,
+         	    	y2:40
+         	    },
+         	    xAxis : [
+         	        {
+         	            type : 'category',
+         	            boundaryGap : false,
+         	            axisLine:false,
+         	            axisTick:false,
+         	            data : hy_list
+         	        }
+         	    ],
+         	    yAxis : [
+         	        {
+         	            type : 'value',
+         	            axisLine:false,
+         	            scale: true,  
+         	            axisLabel : {
+         	                formatter: function (value){
+         	                	var n = value/10000;
+         	                	return n}
+         	            }
+         	        }
+         	    ],
+         	    series : [
+         	        {
+         	            name:'上线车辆数',
+         	            symbol:'emptyCircle',
+         	            type:'line',
+         	            data:hy_online_list,
+         	            itemStyle:{
+         	            	normal:{color:'#42B4E3'}
+         	            }
+         	        },
+         	    ]
+         	};
+      //7天车辆在线率
+        var op_online_rate = {
+        		title:{
+        			subtext: '数据缺失'
+        		},
+        		 tooltip : {
+          	        trigger: 'axis'
+          	    },
+          	    legend: {
+          	        data:['车辆在线率'],
+          	        textStyle:{
+          	        	fontSize:14,
+          	        	fontWeight:'bold'
+          	        },
+          	        x:'left',
+          	        y:'top'
+          	    },
+          	    grid:{
+          	    	x:40,
+          	    	y:30,
+          	    	x2:30,
+          	    	y2:40
+          	    },
+          	    xAxis : [
+          	        {
+          	            type : 'category',
+          	            boundaryGap : false,
+          	            axisLine:false,
+          	            axisTick:false,
+          	            data : hy_list
+          	        }
+          	    ],
+          	    yAxis : [
+          	        {
+          	            type : 'value',
+          	            axisLine:false,
+          	            scale: true,  
+          	           splitNumber:6,
+          	            axisLabel : {
+          	                formatter: function (value){
+          	                	var n = value*100;
+          	                	return n+"%"}
+          	            }
+          	        }
+          	    ],
+          	    series : [
+          	        {
+          	            name:'车辆在线率',
+          	            symbol:'emptyCircle',
+          	            type:'line',
+          	            data:hy_online_rate_list,
+          	            itemStyle:{
+          	            	normal:{color:'#42B4E3'}
+          	            }
+          	        },
+          	    ]
+          	};
+      
+      function getdata_range(week){
+    	  if(typeof(week)=="string"){
+    			var ss=  $.ajax({
+    		 type:"get",
+    		 url:"getdata_range",
+    		 data:{week:week},
+    		 success:function(data){
+    			 console.log("返回的日期区间是"+data);
+    			 var da = '['+data.substr(6, 7);
+    			 console.log(da);
+    			 $("#hy_input").val(data);
+    			 $("#hy_input_02").val(da);
+    			 return data;
+    		 },
+    	  });
+    	  }
+    	return ss;
+      }
+      function toThousands(num) {
+    	    return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
+    	}
+        //最近五周注册车辆
+        var op_hy_five_reg = {
+        		title : {
+      			  subtext:"（单位：万）",
+      			  subtextStyle:{
+      				  fontSize:9,
+      				  align:"left",
+      			  }
+      		    },
+         	    tooltip:{
+         	    	trigger: 'axis',
+         	    	/* formatter:'第{b}周<br/>{a}:{c}' */
+         	    	formatter:function(params,ticket,callback){
+         	    		var data_week = params[0][1];
+         	    		getdata_range(data_week);
+         	    	    setTimeout(function (){
+         	                // 仅为了模拟异步回调
+         	                callback(ticket, '第'+data_week+'周 ' +$("#hy_input_02").val()+'<br/>'+params[0][0]+':'+toThousands(params[0].data));
+         	            }, 200)
+         	    		return "Loading";
+         	    	}
+         	    	},
+         	    legend: {
+         	        data:['注册车辆数'],
+         	        textStyle:{
+         	        	fontSize:14,
+         	        	fontWeight:'bold'
+         	        },
+         	        x:'left',
+         	        y:'top'
+         	    },
+         	    grid:{
+         	    	x:40,
+         	    	y:60,
+         	    	x2:30,
+         	    	y2:40
+         	    },
+         	    xAxis : [
+         	        {
+         	            type : 'category',
+         	            boundaryGap : false,
+         	            axisLine:false,
+         	            axisTick:false,
+         	           axisLabel : {
+       	                formatter: function (value){
+       	                	var n = value;
+       	                	return '第'+n+'周'}
+       	            },
+         	            data : five_list
+         	        }
+         	    ],
+         	    yAxis : [
+         	        {
+         	            type : 'value',
+         	            axisLine:false,
+         	            scale: true,   
+         	           splitNumber:6,
+         	            axisLabel : {
+         	            	formatter: function (value){
+        	                	var n = value/10000;
+        	                	return n}
+         	            }
+         	        }
+         	    ],
+         	    series : [
+         	        {
+         	            name:'注册车辆数',
+         	            symbol:'emptyCircle',
+         	            type:'line',
+         	            data:five_reg_list,
+         	            itemStyle:{
+         	            	normal:{color:'#42B4E3'}
+         	            }
+         	        },
+         	    ]
+         	};
+        //最近五周上线车辆
+        var op_hy_five_online = {
+        		title : {
+      			  subtext:"（单位：万）",
+      			  subtextStyle:{
+      				  fontSize:9,
+      				  align:"left",
+      			  }
+      		    },
+        		tooltip : {
+         	        trigger: 'axis',
+         	       formatter:function(params,ticket,callback){
+        	    		var data_week = params[0][1];
+        	    		getdata_range(data_week);
+        	    	    setTimeout(function (){
+        	                // 仅为了模拟异步回调
+        	                callback(ticket, '第'+data_week+'周 ' +$("#hy_input").val()+'<br/>'+params[0][0]+':'+toThousands(params[0].data));
+        	            }, 200)
+        	    		return "Loading";
+        	    	}
+         	    },
+         	    legend: {
+         	        data:['上线车辆数'],
+         	        textStyle:{
+         	        	fontSize:14,
+         	        	fontWeight:'bold'
+         	        },
+         	        x:'left',
+         	        y:'top'
+         	    },
+         	    grid:{
+         	    	x:40,
+         	    	y:60,
+         	    	x2:30,
+         	    	y2:40
+         	    },
+         	    xAxis : [
+         	        {
+         	            type : 'category',
+         	            boundaryGap : false,
+         	            axisLine:false,
+         	            axisTick:false,
+         	           axisLabel : {
+          	                formatter: function (value){
+          	                	var n = value;
+          	                	return '第'+n+'周'}
+          	            },
+         	            data : five_list
+         	        }
+         	    ],
+         	    yAxis : [
+         	        {
+         	            type : 'value',
+         	            axisLine:false,
+         	            scale: true,  
+         	           splitNumber:6,
+         	            axisLabel : {
+         	                formatter: function (value){
+         	                	var n = value/10000;
+         	                	return n}
+         	            }
+         	        }
+         	    ],
+         	    series : [
+         	        {
+         	            name:'上线车辆数',
+         	            symbol:'emptyCircle',
+         	            type:'line',
+         	            data: five_online_list	,
+         	            itemStyle:{
+         	            	normal:{color:'#42B4E3'}
+         	            }
+         	        },
+         	    ]
+         	};
+        //最近五周轨迹完整率
+        var op_five_trip = {
+        	    tooltip : {
+        	        trigger: 'axis'
+        	    },
+        	    legend: {
+        	        data:['轨迹完整率'],
+        	        x:'left',
+        	        y:'top'
+        	    },
+        	    grid:{
+        	    	x:30,
+        	    	y:30,
+        	    	x2:30,
+        	    	y2:40
+        	    },
+        	    xAxis : [
+        	        {
+        	            type : 'category',
+        	            boundaryGap : false,
+        	            data : ['3.15','3.16','3.17','3.18','3.19','3.20','3.21']
+        	        }
+        	    ],
+        	    yAxis : [
+        	        {
+        	            type : 'value',
+        	            axisLabel : {
+        	                formatter: '{value}'
+        	            }
+        	        }
+        	    ],
+        	    series : [
+        	        {
+        	            name:'轨迹完整率',
+        	            type:'line',
+        	            data:[119, 152, 169, 210, 250, 290, 310],
+        	            itemStyle:{
+        	            	normal:{color:'#42B4E3'}
+        	            }
+        	        },
+        	    ]
+        	};
+        //最近五周车辆在线率
+        var op_five_online_rate = {
+        	    tooltip : {
+        	        trigger: 'axis'
+        	    },
+        	    legend: {
+        	        data:['车辆在线率'],
+        	        x:'left',
+        	        y:'top'
+        	    },
+        	    grid:{
+        	    	x:30,
+        	    	y:30,
+        	    	x2:30,
+        	    	y2:40
+        	    },
+        	    xAxis : [
+        	        {
+        	            type : 'category',
+        	            boundaryGap : false,
+        	            data : ['3.15','3.16','3.17','3.18','3.19','3.20','3.21']
+        	        }
+        	    ],
+        	    yAxis : [
+        	        {
+        	            type : 'value',
+        	            axisLabel : {
+        	                formatter: '{value}'
+        	            }
+        	        }
+        	    ],
+        	    series : [
+        	        {
+        	            name:'车辆在线率',
+        	            type:'line',
+        	            data:[119, 152, 169, 210, 250, 290, 310],
+        	            itemStyle:{
+        	            	normal:{color:'#42B4E3'}
+        	            }
+        	        },
+        	    ]
+        	};
+        //最近五周车辆正确率
+                var op_five_right_rate = {
+                	    tooltip : {
+                	        trigger: 'axis'
+                	    },
+                	    legend: {
+                	        data:['车辆型号正确率','车架号正确率'],
+                	        orient:'vertical',
+                	        borderColor:'#fff',
+                	        x: 'left',
+                	        y: 'top',
+                	    },
+                	    grid:{
+                	    	x:30,
+                	    	y:50,
+                	    	x2:30,
+                	    	y2:20
+                	    },
+                	    xAxis : [
+                	        {
+                	            type : 'category',
+                	            data : ['3.15','3.16','3.17','3.18','3.19','3.20','3.21']
+                	        }
+                	    ],
+                	    yAxis : [
+                	        {
+                	            type : 'value'
+                	        }
+                	    ],
+                	    series : [
+                	        {
+                	            name:'车辆型号正确率',
+                	            type:'bar',
+                	            data:[2.0, 4.9, 135.6, 162.2, 32.6, 20.0, 3.3],
+                	            itemStyle:{
+                	                  normal:{color:'#A0D9F1'}
+                	              }
+                	        },
+                	        {
+                	            name:'车架号正确率',
+                	            type:'bar',
+                	            data:[2.6, 5.9,  175.6, 182.2, 48.7, 18.8, 2.3],
+                	            itemStyle:{
+                	                  normal:{color:'#9BDBD6'}
+                	              }
+                	        }
+                	    ]
+                	};
+        //半年注册车辆
+        var op_hy_half_reg = {
+        	    tooltip : {
+        	        trigger: 'axis'
+        	    },
+        	    legend: {
+        	        data:['注册车辆数'],
+        	        x:'left',
+        	        y:'top'
+        	    },
+        	    grid:{
+        	    	x:30,
+        	    	y:30,
+        	    	x2:30,
+        	    	y2:40
+        	    },
+        	    xAxis : [
+        	        {
+        	            type : 'category',
+        	            boundaryGap : false,
+        	            data : ['3.15','3.16','3.17','3.18','3.19','3.20','3.21']
+        	        }
+        	    ],
+        	    yAxis : [
+        	        {
+        	            type : 'value',
+        	            axisLabel : {
+        	                formatter: '{value}'
+        	            }
+        	        }
+        	    ],
+        	    series : [
+        	        {
+        	            name:'注册车辆数',
+        	            type:'line',
+        	            data:[119, 152, 169, 210, 250, 290, 310],
+        	        },
+        	    ]
+        	};
+        //半年上线车辆
+        var op_hy_half_online = {
+        	    tooltip : {
+        	        trigger: 'axis'
+        	    },
+        	    legend: {
+        	        data:['上线车辆数'],
+        	        x:'left',
+        	        y:'top'
+        	    },
+        	    grid:{
+        	    	x:30,
+        	    	y:30,
+        	    	x2:30,
+        	    	y2:40
+        	    },
+        	    xAxis : [
+        	        {
+        	            type : 'category',
+        	            boundaryGap : false,
+        	            data : ['3.15','3.16','3.17','3.18','3.19','3.20','3.21']
+        	        }
+        	    ],
+        	    yAxis : [
+        	        {
+        	            type : 'value',
+        	            axisLabel : {
+        	                formatter: '{value}'
+        	            }
+        	        }
+        	    ],
+        	    series : [
+        	        {
+        	            name:'上线车辆数',
+        	            type:'line',
+        	            data:[119, 152, 169, 210, 250, 290, 310],
+        	        },
+        	    ]
+        	};
+        	
+                // 为echarts对象加载数据 
+                hy_reg.setOption(op_hy_reg);
+                hy_online.setOption(op_hy_online);
+                trip.setOption(op_trip);
+                online_rate.setOption(op_online_rate);
+                
+                five_trip.setOption(op_five_trip);
+                five_online_rate.setOption(op_five_online_rate);
+                hy_five_reg.setOption(op_hy_five_reg);
+                hy_five_online.setOption(op_hy_five_online);
+                five_right_rate.setOption(op_five_right_rate);
+            }
+        );
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+package com.backup;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service("datecourseregService")
+public class DateCourseRegServiceImpl implements DateCourseRegService {
+	@Autowired
+	private DateCourseRegMapper datecourseregMapper;
+
+	public List<DateCourseReg> query() {
+		return datecourseregMapper.query();
+	}
+
+}

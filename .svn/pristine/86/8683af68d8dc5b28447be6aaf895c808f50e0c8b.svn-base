@@ -1,0 +1,121 @@
+<%@ page language="java" pageEncoding="UTF-8"%>
+<%--引入JSTL核心标签库 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="renderer" content="webkit">
+<link rel="stylesheet" type="text/css" href="font-awesome-4.6.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="css/dataTables.bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="css/css.css" />
+<link rel="shortcut icon" href="img/guide.ico" />
+<title>医生信息查询</title>
+</head>
+<body style="background:#fff;">
+	<nav class="navbar navbar-inverse custom-navbar" style="margin:0 -10px;">
+		<div class="container">
+			<div class="navbar-header">
+				<a href="" class="navbar-brand">
+					医生信息查询
+				</a>
+			</div>
+		</div>
+	</nav>
+	<div class="container no-padding">
+		<div class="row" style="margin:15px auto 10px auto;">
+			<div class="col-xs-10 col-xs-offset-1">
+				<div class="input-group">
+				  <input id="search_key" type="text" class="form-control" placeholder="科室">
+				  <span class="input-group-btn">
+				  	<button id="search_btn" class="btn btn-primary">搜索</button>
+				  </span>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<table id="doc_info" class="table table-bordered table-hover table-striped">
+				</table>
+			</div>
+		</div>
+	</div>			
+	
+	<script src="js/jquery-3.1.0.min.js"></script>
+	<script src="js/jquery.dataTables.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	
+	<script>
+	var table;
+	$("#search_btn").on("click",function(){
+		var searchKey=$("#search_key").val();
+		getHosTable(searchKey); 
+		 
+	});
+
+	 function getHosTable(searchKey){
+		 var list1=[];
+		 var list2=[];
+		 var lis=[];
+		var htm ="";
+		 $.ajax({
+    		 type:"get",
+    		 url:"query_keshi",
+    		 data:{keshi_name:encodeURI(searchKey)},
+    		 success:function(data){
+    			 var obj = eval('(' + data + ')');
+    			 for(i in obj){
+    				 list2.push(obj[i].city_name,obj[i].city_name,obj[i].city_name,obj[i].city_name);
+    				 list1.push(list2);
+    				 list2=[];
+    				 //htm += "<tr><td>"+obj[i].city_name+"</td><td>"+obj[i].doctor_name+"</td><td>"+obj[i].hospital_name+"</td><td>"+searchKey+"</td></tr>";
+    			 }
+    			  lis = list1;
+    			 console.log(lis);
+    			 table =  $('#doc_info').DataTable( {
+    				 "filter": false,
+    				 'bdestroy':true,
+    				 'bRetrieve':true,
+    			     'data': lis,
+    			     'aoColumns': [
+    			            { title: "城市" },
+    			            { title: "姓名" },
+    			            { title: "医院" },
+    			            { title: "科室"},
+    			        ],
+    			      "processing": true,        
+    			      "serverSide": true,       
+    			      "ajax": "datatable_query",
+    			      'language': {  
+     		             'emptyTable': '没有数据',  
+     		             'loadingRecords': '加载中...',  
+     		             'processing': '查询中...',  
+     		             'search': '搜索:',  
+     		             'lengthMenu': '每页 _MENU_ 条',  
+     		             'zeroRecords': '没有数据',  
+     		             'paginate': {  
+     		                 'first':      '首页',  
+     		                 'last':       '末页',  
+     		                 'next':       '下页',  
+     		                 'previous':   '上页'  
+     		             },  
+     		             'info': '第 _PAGE_ 页 / 总 _PAGES_ 页',  
+     		             'infoEmpty': '没有数据',  
+     		             'infoFiltered': '(过滤总数 _MAX_ 条)'  
+     		         }
+    			    } );
+    			console.log(table);
+    		 },
+    	  });
+	} 
+	</script>
+</body>
+</html>
+
+

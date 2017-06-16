@@ -1,0 +1,16 @@
+package com.backup;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service("community_kecheng_patient_viewerService")
+public class CommunityKechengPatientViewerServiceImpl implements CommunityKechengPatientViewerService {
+	@Autowired
+	private CommunityKechengPatientViewerMapper CoursePatientViewerMapper;
+
+	public List<CommunityKechengPatientViewer> query() {
+		return CoursePatientViewerMapper.query();
+	}
+}

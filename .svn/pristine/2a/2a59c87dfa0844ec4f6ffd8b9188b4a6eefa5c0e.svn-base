@@ -1,0 +1,49 @@
+<%@ page language="java" pageEncoding="UTF-8"%>
+<!doctype html>
+<html lang="">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>中交数据中心</title>
+
+<link rel="stylesheet" href="styles/main.css">
+
+</head>
+<body>
+
+<article class="container info-page">
+	<h2>货运平台</h2>
+	<h3>注册车辆数</h3>
+	<p>通过各服务商安装终端、注册车辆信息、并接入到全国道路货运车辆公共监管与服务平台的车辆数（注销车辆不纳入统计）（数据来自货运平台的oracle备份库）（该指标包含已注册但未上报轨迹的车辆数）</p>
+	<h3>上线车辆数</h3>
+	<p>在统计期间内有上线记录的车辆数（周、月统计已对车辆去重）</p>
+	<h2>大卡社交平台</h2>
+	<h3>注册用户数</h3>
+	<p>从大卡的用户表统计的注册用户总数，已剔除手机号和车牌号关联的重复用户</p>
+	<h3>活跃用户数</h3>
+	<p>在统计期间内，在APP有活动的注册用户数量（包含IOS和安卓），“APP有活动”是指用户在大卡APP操作了打开、登陆、浏览、发帖、查询等任何动作</p>
+	<h3>新增注册用户数</h3>
+	<p>在统计期间，大卡新增的用户数量</p>
+	<h3>次日留存率</h3>
+	<p>（第1天新增的用户在第2天还活动的用户数）/第1天新增注册用户数，例如：4月10日的次日留存率是指4月9日新注册用户在4月10日有活动的用户百分比</p>
+	<h3>周留存率</h3>
+	<p>（第1周新增的用户在第2周还活动的用户数）/第1周新增的注册用户数，例如：第15周的周留存率是指第14周新注册用户在第15周有活动的用户百分比</p>
+	<h2>新运营平台</h2>
+	<h3>接入车辆数</h3>
+	<p>根据新运营平台计算在线车辆数据公式计算，查询车辆数据库，且状态为运营状态车辆（数据不包含甘肃、宁夏两省份）</p>
+	<h2>用户中心</h2>
+	<h3>用户总数</h3>
+	<p>从用户总表和会员账户表统计汇总</p>
+	<h2>车辆中心</h2>
+	<h3>车辆总数</h3>
+	<p>车辆中心的车辆总表中车辆数</p>
+	
+</article>
+
+<script src="scripts/zepto.min.js"></script>
+
+<script src="scripts/main.js"></script>
+
+</body>
+</html>

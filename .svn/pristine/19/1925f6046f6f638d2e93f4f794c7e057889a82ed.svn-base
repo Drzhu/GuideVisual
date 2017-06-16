@@ -1,0 +1,17 @@
+;(function(){///重载jquery on方法实现click事件在移动端的快速响应
+    var isTouch = ('ontouchstart' in document.documentElement) ? 'touchstart' : 'click', _on = $.fn.on;
+        $.fn.on = function(){
+            arguments[0] = (arguments[0] === 'click') ? isTouch: arguments[0];
+            return _on.apply(this, arguments); 
+        };
+})();
+
+$(function(){
+	$(".pro-city>.back-btn").on("click",function(){
+		$(this).parent(".pro-city").hide();
+		$(".whole-country").show();
+		$("#city-name").text("全国");
+		$("#city-name2").text("全国");
+		Map_doctor_chart.resize();
+	});
+});

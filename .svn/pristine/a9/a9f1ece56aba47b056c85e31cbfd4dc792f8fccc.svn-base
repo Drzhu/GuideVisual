@@ -1,0 +1,24 @@
+package com.guide.community.mapper;
+import java.util.List;
+
+import com.guide.community.pojo.CommunityHospital;
+
+public interface CommunityHospitalMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(CommunityHospital record);
+
+    int insertSelective(CommunityHospital record);
+
+    CommunityHospital selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(CommunityHospital record);
+
+    int updateByPrimaryKey(CommunityHospital record);
+
+	List<CommunityHospital> query_prov();
+
+	List<CommunityHospital> query_city();
+
+	List<CommunityHospital> getdata_city(String selectedProvince);
+}

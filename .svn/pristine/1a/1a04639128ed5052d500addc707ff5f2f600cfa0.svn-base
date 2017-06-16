@@ -1,0 +1,41 @@
+package com.backup;
+
+import java.io.Serializable;
+
+public class CommunityKechengPatientViewer implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String course_name;
+
+    private String patient_num;
+
+    private String timeperviewer;
+
+	public String getCourse_name() {
+		return course_name;
+	}
+
+	public void setCourse_name(String course_name) {
+		this.course_name = course_name;
+	}
+
+	public String getPatient_num() {
+		return patient_num;
+	}
+
+	public void setPatient_num(String patient_num) {
+		this.patient_num = patient_num;
+	}
+
+	public String getTimeperviewer() {
+		return timeperviewer;
+	}
+
+	public void setTimeperviewer(String timeperviewer) {
+		this.timeperviewer = timeperviewer;
+	}
+
+}

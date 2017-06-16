@@ -1,0 +1,29 @@
+package com.backup;
+
+import java.io.Serializable;
+
+public class Keshi implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private String keshi_name;
+	private String keshi_num;
+	public String getKeshi_name() {
+		return keshi_name;
+	}
+	public void setKeshi_name(String keshi_name) {
+		this.keshi_name = keshi_name;
+	}
+	public String getKeshi_num() {
+		return keshi_num;
+	}
+	public void setKeshi_num(String keshi_num) {
+		this.keshi_num = keshi_num;
+	}
+	@Override
+	public String toString() {
+		return "[keshi_name=" + keshi_name + ", keshi_num=" + keshi_num + "]";
+	}
+}

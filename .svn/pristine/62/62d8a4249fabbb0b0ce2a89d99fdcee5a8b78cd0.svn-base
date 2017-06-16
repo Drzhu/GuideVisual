@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.guide.community.mapper.CommunityDetailInfoMapper">
+<cache type="org.mybatis.caches.ehcache.LoggingEhcache">
+		<property name="timeToIdleSeconds" value="3600" /><!--1 hour -->
+		<property name="timeToLiveSeconds" value="3600" /><!--1 hour -->
+		<property name="maxEntriesLocalHeap" value="1000" />
+		<property name="maxEntriesLocalDisk" value="10000000" />
+		<property name="memoryStoreEvictionPolicy" value="LRU" />
+	</cache>
+	<select id="query_keshi" parameterType="java.lang.String"
+		resultType="CommunityDetailInfo">
+		<![CDATA[
+		select doctor_name,hospital_name,prov_name,city_name,keshi_name from community_detail_info where keshi_name = #{keshi_name}; 
+		]]>
+	</select>
+
+	<select id="datatable_query" parameterType="HashMap" resultType="CommunityDetailInfo">
+		<![CDATA[
+		select doctor_name,hospital_name,prov_name,city_name,keshi_name from community_detail_info 
+		where keshi_name like "%${keshi_name}%" 
+		or city_name like "%${keshi_name}%" 
+		or hospital_name like "%${keshi_name}%" 
+		or doctor_name like "%${keshi_name}%"
+		 limit #{start},10; 
+		]]>
+	</select>
+
+	<select id="query_count" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		<![CDATA[
+		select count(*) from community_detail_info where keshi_name like "%${str}%" 
+		or city_name like "%${str}%" 
+		or hospital_name like "%${str}%" 
+		or doctor_name like "%${str}%"; 
+		]]>
+	</select>
+</mapper>

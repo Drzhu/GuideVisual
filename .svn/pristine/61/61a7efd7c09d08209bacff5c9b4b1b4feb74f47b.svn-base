@@ -1,0 +1,8 @@
+package com.backup;
+
+import java.util.List;
+
+
+public interface CommunityKechengDoctorPatientService {
+	List<CommunityKechengDoctorPatient> query();
+}

@@ -1,0 +1,21 @@
+package com.guide.community.mapper;
+
+import java.util.List;
+
+import com.guide.community.pojo.CommunityKecheng;
+
+public interface CommunityKechengMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(CommunityKecheng record);
+
+    int insertSelective(CommunityKecheng record);
+
+    CommunityKecheng selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(CommunityKecheng record);
+
+    int updateByPrimaryKey(CommunityKecheng record);
+
+	List<CommunityKecheng> query();
+}

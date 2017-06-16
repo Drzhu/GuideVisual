@@ -1,0 +1,8 @@
+$(function(){
+	$(".pro-city>.back-btn").on("click",function(){
+		$(this).parent(".pro-city").hide();
+		$(".whole-country").show();
+		$("#city-name").text("全国");
+		$("#city-name2").text("全国");
+	});
+});

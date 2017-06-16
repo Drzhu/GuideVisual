@@ -1,0 +1,10 @@
+package com.guide.mapper;
+
+import java.util.List;
+
+import com.guide.pojo.DetailInfo;
+
+public interface DetailInfoMapper {
+
+	List<DetailInfo> query_keshi(String keshi_name);
+}

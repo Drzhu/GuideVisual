@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.guide.community.mapper.CommunityMapper">
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache">
+		<property name="timeToIdleSeconds" value="3600" /><!--1 hour -->
+		<property name="timeToLiveSeconds" value="3600" /><!--1 hour -->
+		<property name="maxEntriesLocalHeap" value="1000" />
+		<property name="maxEntriesLocalDisk" value="10000000" />
+		<property name="memoryStoreEvictionPolicy" value="LRU" />
+	</cache>
+	<!-- 查询全国科室分布 -->
+	<select id="queryKeShi" resultType="com.guide.community.pojo.Community">
+		select keshi_name as
+		serialName,keshi_num as serialCount1 from community_keshi order by keshi_num*1
+		desc;
+	</select>
+	<!-- 医生患者人数对比 -->
+	<select id="queryCourseDoctorPatient" resultType="com.guide.community.pojo.Community">
+		select
+		course_name as serialName,doctor_num as serialCount1,patient_num as
+		serialCount2 from community_kecheng_doctor_patient order by patient_num*1 ;
+	</select>
+	<!-- 课程统计 -->
+	<select id="queryCourse" resultType="com.guide.community.pojo.Community">
+		select kecheng_name as
+		serialName,kecheng_num as serialCount1 from community_kecheng order by
+		kecheng_num*1 desc;
+	</select>
+	<!-- 观看课程医患人数对比 -->
+	<select id="queryCoursePatientViewer" resultType="com.guide.community.pojo.Community">
+		select
+		course_name as serialName,patient_num as serialCount1,timeperviewer as
+		serialCount2 from community_kecheng_patient_viewer order by timeperviewer*1;
+	</select>
+	<!-- 注册课程人数 -->
+	<select id="queryDateCourseReg" resultType="com.guide.community.pojo.Community">
+		select date as
+		serialName,course_num as serialCount1,doctor_reg_num as serialCount2
+		from community_date_course_reg order by date;
+	</select>
+	<!-- 查询全国医生各省分布 -->
+	<select id="queryDoctorProv" resultType="com.guide.community.pojo.Community">
+		select distinct
+		prov_name as serialName,prov_num as serialCount1 from community_doc order by
+		prov_num*1 desc;
+	</select>
+	<!-- 查询全国医生省内各市分布 -->
+	<select id="queryDoctorCity" resultType="com.guide.community.pojo.Community">
+		select city_name as
+		serialName,city_num as serialCount1
+		from community_doc order by city_num*1 desc;
+	</select>
+	<!-- 查询全国医生指定省内各市 -->
+	<select id="getDoctorByCity" resultType="com.guide.community.pojo.Community">
+	  <![CDATA[
+		select city_name as serialName,city_num as serialCount1 
+		from community_doc where prov_name = #{selectedProvince} order by city_num*1 desc
+		]]>
+	</select>
+	<!-- 查询全国医院各省分布 -->
+	<select id="queryHospitalProv" resultType="com.guide.community.pojo.Community">
+		select distinct
+		prov_name as serialName,prov_num as serialCount1 from community_hospital order by
+		prov_num*1 desc;
+	</select>
+	<!-- 查询全国医院省内各市分布 -->
+	<select id="queryHospitalCity" resultType="com.guide.community.pojo.Community">
+		select city_name as
+		serialName,city_num as serialCount1
+		from community_hospital order by city_num*1 desc;
+	</select>
+	<!-- 查询全国医院指定省内各市 -->
+	<select id="getHospitalByCity" resultType="com.guide.community.pojo.Community">
+	  <![CDATA[
+		select city_name as serialName,city_num as serialCount1 
+		from community_hospital where prov_name = #{selectedProvince} order by city_num*1 desc
+		]]>
+	</select>
+	<select id="dataTableDoctorDetail" resultType="com.guide.ascvd.pojo.DoctorDetail">
+		<![CDATA[
+		select doctor_name as DoctorName,hospital_name as HospitalName,prov_name as ProvinceName,city_name as CityName,keshi_name as KeShiName from community_detail_info 
+		where keshi_name like "%${keshi_name}%" 
+		or city_name like "%${keshi_name}%" 
+		or hospital_name like "%${keshi_name}%" 
+		or doctor_name like "%${keshi_name}%"
+		 limit #{start},10; 
+		]]>
+	</select>
+	<select id="dataTableDoctorDetailCount" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		<![CDATA[
+		select count(*) from community_detail_info where keshi_name like "%${_parameter}%" 
+		or city_name like "%${_parameter}%" 
+		or hospital_name like "%${_parameter}%" 
+		or doctor_name like "%${_parameter}%"; 
+		]]>
+	</select>
+</mapper>

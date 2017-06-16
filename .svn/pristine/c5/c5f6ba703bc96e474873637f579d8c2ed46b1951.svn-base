@@ -1,0 +1,347 @@
+<%@ page language="java" pageEncoding="UTF-8"%>
+<%--引入JSTL核心标签库 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<meta name="viewport" content="width=device-width, initial-scale=1,maxinum-scale=1,user-scalable=no">
+    	<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<meta name="renderer" content="webkit">
+    	<link rel="stylesheet" type="text/css" href="font-awesome-4.6.3/css/font-awesome.css" />
+    	<link rel="stylesheet" type="text/css" href="css/manage_css/bootstrap.min.css" />
+    	<link rel="stylesheet" type="text/css" href="css/manage_css/css.css" />
+		<title>数据可视化管理平台</title>
+	</head>
+	<body>
+		<nav class="navbar navbar-fixed-top navbar-inverse custom-navbar">
+			<div class="container-fluid">
+				<div class="navbar-header" style="width:100%;">
+				    <button type="button" class="navbar-toggle pull-left" data-toggle="sidebar" data-target="#sidebar" >
+				        <span class="sr-only">缩小菜单</span>
+				        <span class="icon-bar"></span>
+				        <span class="icon-bar"></span>
+				        <span class="icon-bar"></span>
+				    </button>
+					<a href="" class="navbar-brand"><img class="pull-left" src="img/guidelogo.png" width="38"/>数据可视化</a>
+					<div class="user-menu dropdown pull-right">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-user"></span> ${sessionScope.username} <span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="#"><span class="fa fa-cog"></span> 设置</a></li>
+							<li><a href="logout"><i class="fa fa-sign-out"></i>&nbsp;退出</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</nav>
+		<div id="sidebar" class="col-sm-3 col-lg-2 sidebar">
+			<ul class="nav-list">
+	            <li class="active"><a href="hospital"><i class="fa fa-dashboard"></i> 医院信息</a></li>
+				<li><a href="course"><i class="fa fa-th"></i> 课程信息</a></li>
+				<li><a href="patient"><i class="fa fa-info-circle"></i> 患者信息</a></li>
+				<li><a href="date"><i class="fa fa-calendar"></i> 日期信息</a></li>
+	        </ul>
+		</div>
+		<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
+			<div class="row">
+				<ol class="breadcrumb">
+				  <li><i class="fa fa-home"></i> 医院信息</li>
+				</ol>
+			</div>
+			<div class="row margin-top">
+				<div class="col-sm-12">
+					<div class="panel panel-info">
+						<div class="panel-heading">医生统计</div>
+						<div class="panel-body">
+							<div id="map_doctor"  class = "col-sm-9 no-padding" style="height: 450px;"></div>
+							<div class="col-sm-3 no-padding">
+										<h4><span id="city-name">全国</span>医院数量</h4>
+										<div id="doc-pro" class="table-responsive whole-country">
+											<!--全国表格start-->
+											<table class="table table-bordered table-hover table-striped">
+												<tr>
+													<th>城市</th>
+													<th>数量</th>
+												</tr>
+												<c:forEach var="item" items="${Doc_prov}" varStatus="status">
+												<tr>
+												<td>${item.name}</td>
+												<td>${item.value}</td>
+												</tr>
+												</c:forEach>
+											</table>	
+										</div>	
+										<div id="doc-city" class="table-responsive pro-city" style="display: none;">
+											<button id = 'back-china' class="btn btn-sm btn-success pull-right back-btn" style="margin: 5px;">返回全国</button>
+											<!--城市表格start-->
+											<table class="table table-bordered table-hover table-striped" id = "doc_city_table" >
+												<tr>
+													<th>城市</th>
+													<th>数量</th>
+												</tr>
+											</table>
+										</div>	
+									</div>
+						</div>
+					</div>
+				</div>
+				
+			</div>	
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="panel panel-info">
+						<div class="panel-heading">医院统计</div>
+						<div class="panel-body">
+							<div id="map_hostipal"  class = "col-sm-9 no-padding" style="height: 500px;"></div>
+							<div class="col-sm-3 no-padding">
+										<h4><span id="city-name2">全国</span>医院数量</h4>
+										<div id="hos-pro" class="table-responsive whole-country">
+											<!--全国表格start-->
+											<table class="table table-bordered table-hover table-striped">
+												<tr>
+													<th>城市</th>
+													<th>数量</th>
+												</tr>
+												<c:forEach var="item" items="${Hos_prov}" varStatus="status">
+												<tr>
+												<td>${item.name}</td>
+												<td>${item.value}</td>
+												</tr>
+												</c:forEach>
+											</table>	
+										</div>	
+										<div id="hos-city" class="table-responsive pro-city" style="display: none;">
+											<button id = 'back-china2' class="btn btn-sm btn-success pull-right back-btn" style="margin: 5px;">返回全国</button>
+											<!--城市表格start-->
+											<table class="table table-bordered table-hover table-striped" id="hos_city_table" >
+												<tr>
+													<th>城市</th>
+													<th>数量</th>
+												</tr>
+											</table>
+										</div>	
+									</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="panel panel-info">
+						<div class="panel-heading">科室统计</div>
+						<div class="panel-body">
+							<div id="keshi_pie" class = "col-sm-9 no-padding" style="height: 500px;"></div>
+							<div class="col-sm-3 no-padding keshi-tab">
+										<h4>科室数量</h4>
+										<div class="table-responsive whole-country">
+											<!--全国表格start-->
+											<table class="table table-bordered table-hover table-striped">
+												<tr>
+													<th>科室</th>
+													<th>数量</th>
+												</tr>
+												<c:forEach var="item" items="${Pie_keshi}" varStatus="status">
+												<tr>
+												<td>${item.keshi_name}</td>
+												<td>${item.keshi_num}</td>
+												</tr>
+												</c:forEach>
+											</table>	
+										</div>	
+									</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="js/jquery-3.1.0.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/echarts.min.js"></script>
+		<script src="js/china.js"></script>
+		<script src="js/manage.js"></script>
+		<script src="js/province/province.js"></script>
+		<!-- <script src="js/js.js"></script> -->
+		<script src="js/manage_option/map_doctor.js"></script>
+		<script src="js/manage_option/selectprovince.js"></script>
+		<script src="js/manage_option/pie_keshi.js"></script>
+		<script src="js/manage_option/map_hospital.js"></script>
+		<script type="text/javascript">
+		
+        // 基于准备好的dom，初始化echarts实例
+         var Map_doctor_chart = echarts.init(document.getElementById('map_doctor'));
+        var Map_hospital_chart = echarts.init(document.getElementById('map_hostipal'));
+        var Pie_keshi_chart = echarts.init(document.getElementById('keshi_pie'));
+        var doc_prov_list = [];
+		<c:forEach var="item" items="${Doc_prov}" varStatus="status">
+		var doc_prov_dict= {};
+		doc_prov_dict["name"]='${item.name}';
+		doc_prov_dict["value"]=${item.value};
+		doc_prov_list.push(doc_prov_dict);
+		</c:forEach>
+		var doc_city_list = [];
+		<c:forEach var="item" items="${Doc_city}" varStatus="status">
+		var doc_city_dict= {};
+		doc_city_dict["name"]='${item.name}';
+		doc_city_dict["value"]=${item.value};
+		doc_city_list.push(doc_city_dict);
+		</c:forEach>
+		
+		var hos_prov_list = [];
+		<c:forEach var="item" items="${Hos_prov}" varStatus="status">
+		var hos_prov_dict= {};
+		hos_prov_dict["name"]='${item.name}';
+		hos_prov_dict["value"]=${item.value};
+		hos_prov_list.push(hos_prov_dict);
+		</c:forEach>
+		
+		var hos_city_list = [];
+		<c:forEach var="item" items="${Hos_city}" varStatus="status">
+		var hos_city_dict= {};
+		hos_city_dict["name"]='${item.name}';
+		hos_city_dict["value"]=${item.value};
+		hos_city_list.push(hos_city_dict);
+		</c:forEach>
+		var map_doctor_option = map_doctor_option(doc_prov_list);
+        var map_hospital_option = map_hostipal_option(hos_prov_list);
+        
+        Map_doctor_chart.on('mapselectchanged', function(param) {
+    		var selected = param.selected;
+    		var selectedProvince;
+    		var name;
+    		for(var i = 0, l = map_doctor_option.series[0].data.length; i < l; i++) {
+    			name = map_doctor_option.series[0].data[i].name;
+    			map_doctor_option.series[0].data[i].selected = selected[name];
+    			if(selected[name]) {
+    				selectedProvince = name;
+    				getDocTable(selectedProvince);
+    			}
+    		}
+    		if(typeof selectedProvince == 'undefined') {
+    			map_doctor_option.series.splice(1);
+    			Map_doctor_chart.setOption(map_doctor_option, true);
+    			return;
+    		}
+    		var select_option_series = selectprovince(selectedProvince,doc_city_list,'医生人数');
+    		map_doctor_option.series[0].layoutCenter= ['25%', '60%'],
+    		map_doctor_option.series[0].layoutSize=400;
+    		map_doctor_option.series[0].label.normal.textStyle.fontSize=5;
+    		map_doctor_option.series[1] = select_option_series;
+    		
+    		Map_doctor_chart.setOption(map_doctor_option, true);
+    	});
+        
+        Map_hospital_chart.on('mapselectchanged', function(param) {
+    		var selected = param.selected;
+    		var selectedProvince;
+    		var name;
+    		for(var i = 0, l = map_hospital_option.series[0].data.length; i < l; i++) {
+    			name = map_hospital_option.series[0].data[i].name;
+    			map_hospital_option.series[0].data[i].selected = selected[name];
+    			if(selected[name]) {
+    				selectedProvince = name;
+    				getHosTable(selectedProvince);
+    			}
+    		}
+    		if(typeof selectedProvince == 'undefined') {
+    			map_hospital_option.series.splice(1);
+    			Map_hospital_chart.setOption(map_hospital_option, true);
+    			return;
+    		}
+    		var select_option_series = selectprovince(selectedProvince,hos_city_list,'医院数量');
+    		map_hospital_option.series[0].layoutCenter=['25%', '60%'],
+    		map_hospital_option.series[0].layoutSize=400;
+    		map_hospital_option.series[0].label.normal.textStyle.fontSize=5;
+    		map_hospital_option.series[1] = select_option_series;
+    		Map_hospital_chart.setOption(map_hospital_option, true);
+    	});
+        
+    
+    	var keshi_legend_list = [];
+    	<c:forEach var="item" items="${Pie_keshi}" varStatus="status">
+    	keshi_legend_list.push('${item.keshi_name}');
+    	</c:forEach> 
+    	var keshi_data_list = [];
+		<c:forEach var="item" items="${Pie_keshi}" varStatus="status">
+		var keshi_dict= {};
+		keshi_dict["name"]='${item.keshi_name}';
+		keshi_dict["value"]=${item.keshi_num};
+		keshi_data_list.push(keshi_dict);
+		</c:forEach>
+		var pie_keshi_option = pie_keshi(keshi_legend_list,keshi_data_list);
+		
+		Map_doctor_chart.setOption(map_doctor_option);
+        Map_hospital_chart.setOption(map_hospital_option);
+        Pie_keshi_chart.setOption(pie_keshi_option);
+        setTimeout(function (){ 
+            window.onresize = function () { 
+           	 Map_doctor_chart.resize(); 
+           	 Map_hospital_chart.resize(); 
+           	 Pie_keshi_chart.resize(); 
+            } 
+       },200);
+        
+        $("#back-china").on("click",function(){
+			map_doctor_option.series[0].layoutCenter= ['50%', '50%'];
+    		map_doctor_option.series[0].layoutSize=500;
+    		map_doctor_option.series[0].label.normal.textStyle.fontSize=7;
+    		map_doctor_option.series.splice(1);
+    		Map_doctor_chart.setOption(map_doctor_option,true);
+    		
+    		$(this).parent(".pro-city").hide();
+    		$(this).parent(".pro-city").siblings(".whole-country").show();
+    		$("#city-name").text("全国");
+		 });
+		$("#back-china2").on("click",function(){
+			map_hospital_option.series[0].layoutCenter= ['50%', '50%'];
+			map_hospital_option.series[0].layoutSize=500;
+			map_hospital_option.series[0].label.normal.textStyle.fontSize=7;
+			map_hospital_option.series.splice(1);
+    		Map_hospital_chart.setOption(map_hospital_option,true);
+    		
+    		$(this).parent(".pro-city").hide();
+    		$(this).parent(".pro-city").siblings(".whole-country").show();
+    		$("#city-name2").text("全国");
+		 });
+	function getDocTable(selectedProvince){
+		var htm ="<tr><th>城市</th><th>数量</th></tr>";
+		$("#city-name").text(selectedProvince);
+		 $.ajax({
+    		 type:"get",
+    		 url:"ajaxcity_data",
+    		 data:{selectedProvince:encodeURI(selectedProvince)},
+    		 success:function(data){
+    			 var obj = eval('(' + data + ')');
+    			 for(i in obj){
+    				 htm += "<tr><td>"+obj[i].city_name+"</td><td>"+obj[i].city_num+"</td></tr>";
+    			 }
+    			 $("#doc_city_table tbody").html(htm);
+    		 },
+    	  });
+		$("#doc-city").show();
+		$("#doc-pro").hide();
+	};
+	function getHosTable(selectedProvince){
+		var htm ="<tr><th>城市</th><th>数量</th></tr>";
+		$("#city-name2").text(selectedProvince);
+		 $.ajax({
+    		 type:"get",
+    		 url:"ajaxhoscity_data",
+    		 data:{selectedProvince:encodeURI(selectedProvince)},
+    		 success:function(data){
+    			 var obj = eval('(' + data + ')');
+    			 for(i in obj){
+    				 htm += "<tr><td>"+obj[i].city_name+"</td><td>"+obj[i].city_num+"</td></tr>";
+    			 }
+    			 $("#hos_city_table tbody").html(htm);
+    		 },
+    	  });
+		$("#hos-city").show();
+		$("#hos-pro").hide();
+	}
+    </script>
+	</body>
+</html>

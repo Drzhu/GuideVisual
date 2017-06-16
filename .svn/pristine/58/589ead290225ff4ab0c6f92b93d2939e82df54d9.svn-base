@@ -1,0 +1,25 @@
+package com.guide.community.mapper;
+
+import java.util.List;
+
+import com.guide.community.pojo.CommunityDoc;
+
+public interface CommunityDocMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(CommunityDoc record);
+
+    int insertSelective(CommunityDoc record);
+
+    CommunityDoc selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(CommunityDoc record);
+
+    int updateByPrimaryKey(CommunityDoc record);
+
+	List<CommunityDoc> query_city();
+
+	List<CommunityDoc> getdata_city(String selectedProvince);
+
+	List<CommunityDoc> community_query_prov();
+}

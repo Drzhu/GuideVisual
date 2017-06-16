@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.guide.mapper.UserMapper" >
+  <!-- 验证用户名和密码是否正确 -->
+   <select id="validate_right" resultType="java.lang.Integer" parameterType="user" >
+    select count(*) from bi_user
+    where username = #{username,jdbcType=VARCHAR} and password = #{password,jdbcType=VARCHAR} and level = #{level,jdbcType=VARCHAR}
+  </select>
+  <!-- 验证是否存在该用户 -->
+     <select id="validate_user" resultType="java.lang.Integer" parameterType="java.lang.String" >
+    select count(*) from bi_user
+    where username = #{username,jdbcType=VARCHAR} 
+  </select>
+  <!-- 更新密码 -->
+    <update id="update" parameterType="user" >
+    update bi_user
+    <set >
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where username = #{username,jdbcType=VARCHAR}
+  </update>
+</mapper>

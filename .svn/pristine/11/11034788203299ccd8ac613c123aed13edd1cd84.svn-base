@@ -1,0 +1,9 @@
+package com.backup;
+
+import java.util.List;
+
+public interface DoctorMapper {
+	List<Doctor> query_prov();
+	List<Doctor> query_city();
+	List<Doctor> getdata_city(String selectedProvince);
+}

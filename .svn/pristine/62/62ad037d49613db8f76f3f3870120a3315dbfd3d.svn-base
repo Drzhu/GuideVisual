@@ -1,0 +1,7 @@
+package com.backup;
+
+import java.util.List;
+
+public interface CommunityDateCourseRegService {
+	List<CommunityDateCourseReg> query();
+}
